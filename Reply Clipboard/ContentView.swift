@@ -27,20 +27,21 @@ struct ContentView: View {
     var body: some View {
         NavigationSplitView {
             List(selection: $selectedItem) {
-                ForEach(items/*.sorted { $0.name < $1.name }*/, id: \.self) { item in
-                    NavigationLink(value: item) {
-                        HStack {
-                            Text("\(item.name)")
-                            Spacer()
-                            Button(action: {
-                                copyToClipboard(item.text)
-                            }) {
-                                Image(systemName: "clipboard")
-                            }
+                ForEach(items.sorted { $0.name < $1.name }, id: \.self) { item in
+                    HStack {
+                        Text("\(item.name)")
+                        Spacer()
+                        Button(action: {
+                            copyToClipboard(item.text)
+                        }) {
+                            Image(systemName: "clipboard")
                         }
+                    }.onTapGesture {
+                        selectedItem = item
                     }
                 }
             }
+            .listStyle(.sidebar)
             .onDeleteCommand {
                 if let item = selectedItem {
                     modelContext.delete(item)
@@ -75,17 +76,7 @@ struct ContentView: View {
             NavigationStack {
                 ZStack {
                     if let item = selectedItem {
-                        ItemEditor(item: item, onSave: {
-                            /* This code can cause the app to crash.
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                                do {
-                                    try refreshList()
-                                } catch {
-                                    // ignore
-                                }
-                            }
-                            */
-                        }) {
+                        ItemEditor(item: item) {
                             selectedItem = nil
                             modelContext.delete(item)
                         }
@@ -132,6 +123,7 @@ struct ContentView: View {
         withAnimation {
             let newItem = Item(name: "new item", text: "", timestamp: Date())
             modelContext.insert(newItem)
+            selectedItem = newItem
         }
     }
     

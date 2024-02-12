@@ -14,13 +14,11 @@ class ItemWrapper {
 
 struct ItemEditor: View {
     var item: Item
-    var onSave: () -> Void
     var onDelete: () -> Void
     var wrapper = ItemWrapper()
     
-    init(item: Item, onSave: @escaping () -> Void, onDelete: @escaping () -> Void) {
+    init(item: Item, onDelete: @escaping () -> Void) {
         self.item = item
-        self.onSave = onSave
         self.onDelete = onDelete
         wrapper.name = item.name
         wrapper.text = item.text
@@ -55,7 +53,6 @@ struct ItemEditor: View {
                 Button(action: {
                     item.name = wrapper.name
                     item.text = wrapper.text
-                    onSave()
                 }) {
                     Text("Save")
                 }
