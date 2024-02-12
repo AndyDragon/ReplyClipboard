@@ -1,5 +1,5 @@
 //
-//  Reply_ClipboardApp.swift
+//  ReplyClipboardApp.swift
 //  Reply Clipboard
 //
 //  Created by Andrew Forget on 2024-02-11.
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct Reply_ClipboardApp: App {
+struct ReplyClipboardApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,

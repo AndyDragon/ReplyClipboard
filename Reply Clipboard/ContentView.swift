@@ -8,11 +8,22 @@
 import SwiftUI
 import SwiftData
 
+enum BackupOperation: Int, Codable, CaseIterable {
+    case none,
+         backup,
+         restore
+}
+
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query var items: [Item]
-    @State var selectedItem: Item?
-
+    @Query(sort: \Item.timestamp) private var items: [Item]
+    @State private var selectedItem: Item?
+    @State private var showingCopiedToClipboardAlert = false
+    @State private var clipboardName = ""
+    @State private var exceptionError = ""
+    @State private var backupOperation = BackupOperation.none
+    @State private var showingBackupRestoreErrorAlert = false
+    
     var body: some View {
         NavigationSplitView {
             List(selection: $selectedItem) {
@@ -42,12 +53,39 @@ struct ContentView: View {
                         Label("Add Item", systemImage: "plus")
                     }
                 }
+                ToolbarItem {
+                    Button(action: {
+                        do {
+                            try refreshList()
+                        } catch {
+                            // do nothing
+                        }
+                    }) {
+                        Label("Refresh", systemImage: "arrow.clockwise")
+                    }
+                }
+                ToolbarItem {
+                    Menu("JSON", systemImage: "tray") {
+                        Button("Backup", systemImage: "tray.and.arrow.down", action: backup)
+                        Button("Restore", systemImage: "tray.and.arrow.up", action: restore)
+                    }
+                }
             }
         } detail: {
             NavigationStack {
                 ZStack {
                     if let item = selectedItem {
-                        ItemEditor(item: item) {
+                        ItemEditor(item: item, onSave: {
+                            /* This code can cause the app to crash.
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                                do {
+                                    try refreshList()
+                                } catch {
+                                    // ignore
+                                }
+                            }
+                            */
+                        }) {
                             selectedItem = nil
                             modelContext.delete(item)
                         }
@@ -55,15 +93,48 @@ struct ContentView: View {
                 }
             }
         }
+        .alert(
+            "Copied to clipboard",
+            isPresented: $showingCopiedToClipboardAlert,
+            actions: {
+                Button(action: {
+                    showingCopiedToClipboardAlert.toggle()
+                }) {
+                    Text("OK")
+                }
+            },
+            message: {
+                Text("Copied the \(clipboardName) to the clipboard.")
+            }
+        )
+        .alert(
+            backupOperation == .backup
+            ? "ERROR: Failed to backup"
+            : "ERROR: Failed to restore",
+            isPresented: $showingBackupRestoreErrorAlert,
+            actions: {
+                Button(action: {
+                    showingBackupRestoreErrorAlert.toggle()
+                }) {
+                    Text("OK")
+                }
+            },
+            message: {
+                Text(backupOperation == .backup
+                     ? "Could to backup to the clipboard: \(exceptionError)"
+                     : "Could to restore from the clipboard: \(exceptionError)")
+                .accentColor(.red)
+            }
+        )
     }
-
+    
     private func addItem() {
         withAnimation {
             let newItem = Item(name: "new item", text: "", timestamp: Date())
             modelContext.insert(newItem)
         }
     }
-
+    
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             for index in offsets {
@@ -71,7 +142,7 @@ struct ContentView: View {
             }
         }
     }
-
+    
     private func copyToClipboard(_ text: String) -> Void {
 #if os(iOS)
         var clipText = String(text)
@@ -90,6 +161,87 @@ struct ContentView: View {
         pasteBoard.clearContents()
         pasteBoard.writeObjects([clipText as NSString])
 #endif
+    }
+    
+    func copyToClipboardRaw(_ text: String) -> Void {
+#if os(iOS)
+        UIPasteboard.general.string = text
+#else
+        let pasteBoard = NSPasteboard.general
+        pasteBoard.clearContents()
+        pasteBoard.writeObjects([text as NSString])
+#endif
+    }
+    
+    func refreshList() throws -> Void {
+        selectedItem = nil
+        var sortedItems = [Item]()
+        items.sorted { $0.name < $1.name }.forEach { item in
+            sortedItems.append(Item(name: item.name, text: item.text))
+        }
+        do {
+            try modelContext.delete(model: Item.self)
+        } catch {
+            // do nothing
+        }
+        for item in sortedItems {
+            modelContext.insert(item)
+        }
+    }
+
+    func backup() -> Void {
+        do {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.sortedKeys, .prettyPrinted]
+            let json = try encoder.encode(items.sorted { $0.name < $1.name })
+            copyToClipboardRaw(String(decoding: json, as: UTF8.self))
+            clipboardName = "backup"
+            showingCopiedToClipboardAlert.toggle()
+        } catch {
+            exceptionError = error.localizedDescription
+            backupOperation = .backup
+            showingBackupRestoreErrorAlert.toggle()
+        }
+    }
+    
+    func restore() -> Void {
+        do {
+            selectedItem = nil
+            let pasteBoard = NSPasteboard.general
+            let json = pasteBoard.string(forType: .string) ?? ""
+            let loadedItems = try JSONDecoder().decode([Item].self, from: json.data(using: .utf8)!)
+            if loadedItems.count != 0 {
+                selectedItem = nil
+                do {
+                    try modelContext.delete(model: Item.self)
+                } catch {
+                    // do nothing
+                }
+                for item in loadedItems.sorted(by: { $0.name < $1.name }) {
+                    modelContext.insert(item)
+                }
+            }
+        } catch let DecodingError.dataCorrupted(context) {
+            exceptionError = context.debugDescription
+            backupOperation = .restore
+            showingBackupRestoreErrorAlert.toggle()
+        } catch let DecodingError.keyNotFound(key, context) {
+            exceptionError = "Key '\(key)' not found:" + context.debugDescription
+            backupOperation = .restore
+            showingBackupRestoreErrorAlert.toggle()
+        } catch let DecodingError.valueNotFound(value, context) {
+            exceptionError = "Value '\(value)' not found:" + context.debugDescription
+            backupOperation = .restore
+            showingBackupRestoreErrorAlert.toggle()
+        } catch let DecodingError.typeMismatch(type, context) {
+            exceptionError = "Type '\(type)' mismatch:" + context.debugDescription
+            backupOperation = .restore
+            showingBackupRestoreErrorAlert.toggle()
+        } catch {
+            exceptionError = error.localizedDescription
+            backupOperation = .restore
+            showingBackupRestoreErrorAlert.toggle()
+        }
     }
 }
 

@@ -9,47 +9,24 @@ import SwiftUI
 
 class ItemWrapper {
     @Published var name: String = ""
+    @Published var text: String = ""
 }
 
 struct ItemEditor: View {
     var item: Item
+    var onSave: () -> Void
     var onDelete: () -> Void
     var wrapper = ItemWrapper()
     
-    init(item: Item, onDelete: @escaping () -> Void) {
-        //debugPrint("Setting item \(item.name)...")
+    init(item: Item, onSave: @escaping () -> Void, onDelete: @escaping () -> Void) {
         self.item = item
+        self.onSave = onSave
         self.onDelete = onDelete
         wrapper.name = item.name
-//        name = item.name
-//        nameBinding = Binding(
-//            get: { name },
-//            set: { name = $0 }
-//        )
-        //self.text = item.text
+        wrapper.text = item.text
     }
     
     var body: some View {
-//        VStack {
-//            HStack {
-//                Spacer()
-//                Button(action: onDelete) {
-//                    Image(systemName: "trash")
-//                }
-//            }.padding([.bottom], 12)
-//            HStack {
-//                Text("Name:")
-//                    .frame(width: 60)
-//                TextField("Enter the name for the item", text: $item.name)
-//            }
-//            HStack {
-//                Text("Text:")
-//                    .frame(width: 60)
-//                TextField("Enter the text for the item", text: $item.text)
-//            }
-//            Spacer()
-//        }
-//        .padding(20)
         VStack {
             HStack {
                 Spacer()
@@ -67,16 +44,18 @@ struct ItemEditor: View {
                 TextField("Enter the name for the item", text: nameBinding)
             }
             HStack {
-                let text = Binding(
-                    get: { item.text },
-                    set: { item.text = $0 })
+                let textBinding = Binding(
+                    get: { wrapper.text },
+                    set: { wrapper.text = $0 })
                 Text("Text:")
                     .frame(width: 60)
-                TextField("Enter the text for the item", text: text)
+                TextField("Enter the text for the item", text: textBinding)
             }
             HStack {
                 Button(action: {
                     item.name = wrapper.name
+                    item.text = wrapper.text
+                    onSave()
                 }) {
                     Text("Save")
                 }

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		492DC1FD2B79A1E3004BC668 /* Reply_ClipboardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492DC1FC2B79A1E3004BC668 /* Reply_ClipboardApp.swift */; };
+		492DC1FD2B79A1E3004BC668 /* ReplyClipboardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492DC1FC2B79A1E3004BC668 /* ReplyClipboardApp.swift */; };
 		492DC1FF2B79A1E3004BC668 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492DC1FE2B79A1E3004BC668 /* ContentView.swift */; };
 		492DC2012B79A1E3004BC668 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492DC2002B79A1E3004BC668 /* Item.swift */; };
 		492DC2032B79A1E4004BC668 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 492DC2022B79A1E4004BC668 /* Assets.xcassets */; };
@@ -17,12 +17,12 @@
 
 /* Begin PBXFileReference section */
 		492DC1F92B79A1E3004BC668 /* Reply Clipboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Reply Clipboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		492DC1FC2B79A1E3004BC668 /* Reply_ClipboardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reply_ClipboardApp.swift; sourceTree = "<group>"; };
+		492DC1FC2B79A1E3004BC668 /* ReplyClipboardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplyClipboardApp.swift; sourceTree = "<group>"; };
 		492DC1FE2B79A1E3004BC668 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		492DC2002B79A1E3004BC668 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		492DC2022B79A1E4004BC668 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		492DC2052B79A1E4004BC668 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		492DC2072B79A1E4004BC668 /* Reply_Clipboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Reply_Clipboard.entitlements; sourceTree = "<group>"; };
+		492DC2072B79A1E4004BC668 /* ReplyClipboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ReplyClipboard.entitlements; sourceTree = "<group>"; };
 		492DC20D2B79B59A004BC668 /* ItemEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -56,12 +56,12 @@
 		492DC1FB2B79A1E3004BC668 /* Reply Clipboard */ = {
 			isa = PBXGroup;
 			children = (
-				492DC1FC2B79A1E3004BC668 /* Reply_ClipboardApp.swift */,
+				492DC1FC2B79A1E3004BC668 /* ReplyClipboardApp.swift */,
 				492DC1FE2B79A1E3004BC668 /* ContentView.swift */,
 				492DC20D2B79B59A004BC668 /* ItemEditor.swift */,
 				492DC2002B79A1E3004BC668 /* Item.swift */,
 				492DC2022B79A1E4004BC668 /* Assets.xcassets */,
-				492DC2072B79A1E4004BC668 /* Reply_Clipboard.entitlements */,
+				492DC2072B79A1E4004BC668 /* ReplyClipboard.entitlements */,
 				492DC2042B79A1E4004BC668 /* Preview Content */,
 			);
 			path = "Reply Clipboard";
@@ -148,7 +148,7 @@
 				492DC1FF2B79A1E3004BC668 /* ContentView.swift in Sources */,
 				492DC20E2B79B59A004BC668 /* ItemEditor.swift in Sources */,
 				492DC2012B79A1E3004BC668 /* Item.swift in Sources */,
-				492DC1FD2B79A1E3004BC668 /* Reply_ClipboardApp.swift in Sources */,
+				492DC1FD2B79A1E3004BC668 /* ReplyClipboardApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,7 +278,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Reply Clipboard/Reply_Clipboard.entitlements";
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = "Reply Clipboard/ReplyClipboard.entitlements";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -307,7 +309,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Reply Clipboard/Reply_Clipboard.entitlements";
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = "Reply Clipboard/ReplyClipboard.entitlements";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
