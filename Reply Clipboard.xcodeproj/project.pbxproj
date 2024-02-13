@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4918AC1F2B7C23200078BC00 /* CloudKitSyncMonitor in Frameworks */ = {isa = PBXBuildFile; productRef = 4918AC1E2B7C23200078BC00 /* CloudKitSyncMonitor */; };
 		492DC1FD2B79A1E3004BC668 /* ReplyClipboardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492DC1FC2B79A1E3004BC668 /* ReplyClipboardApp.swift */; };
 		492DC1FF2B79A1E3004BC668 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492DC1FE2B79A1E3004BC668 /* ContentView.swift */; };
 		492DC2012B79A1E3004BC668 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492DC2002B79A1E3004BC668 /* Item.swift */; };
@@ -32,6 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4918AC1F2B7C23200078BC00 /* CloudKitSyncMonitor in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,6 +95,9 @@
 			dependencies = (
 			);
 			name = "Reply Clipboard";
+			packageProductDependencies = (
+				4918AC1E2B7C23200078BC00 /* CloudKitSyncMonitor */,
+			);
 			productName = "Reply Clipboard";
 			productReference = 492DC1F92B79A1E3004BC668 /* Reply Clipboard.app */;
 			productType = "com.apple.product-type.application";
@@ -121,6 +126,9 @@
 				Base,
 			);
 			mainGroup = 492DC1F02B79A1E3004BC668;
+			packageReferences = (
+				4918AC1D2B7C23200078BC00 /* XCRemoteSwiftPackageReference "CloudKitSyncMonitor" */,
+			);
 			productRefGroup = 492DC1FA2B79A1E3004BC668 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -285,13 +293,14 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Reply Clipboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 7U6K972H9Q;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Info.plist";
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Reply Clipboard";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -317,13 +326,14 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Reply Clipboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 7U6K972H9Q;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Info.plist";
+				INFOPLIST_FILE = Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Reply Clipboard";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -361,6 +371,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4918AC1D2B7C23200078BC00 /* XCRemoteSwiftPackageReference "CloudKitSyncMonitor" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ggruen/CloudKitSyncMonitor.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4918AC1E2B7C23200078BC00 /* CloudKitSyncMonitor */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4918AC1D2B7C23200078BC00 /* XCRemoteSwiftPackageReference "CloudKitSyncMonitor" */;
+			productName = CloudKitSyncMonitor;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 492DC1F12B79A1E3004BC668 /* Project object */;
 }

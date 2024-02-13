@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import CloudKitSyncMonitor
 
 enum BackupOperation: Int, Codable, CaseIterable {
     case none,
@@ -23,100 +24,123 @@ struct ContentView: View {
     @State private var exceptionError = ""
     @State private var backupOperation = BackupOperation.none
     @State private var showingBackupRestoreErrorAlert = false
+    @State private var showSyncAccountStatus = false
+    @ObservedObject private var syncMonitor = SyncMonitor.shared
     
     var body: some View {
-        NavigationSplitView {
-            List(selection: $selectedItem) {
-                ForEach(items.sorted { $0.name < $1.name }, id: \.self) { item in
-                    HStack {
-                        Text("\(item.name)")
-                        Spacer()
-                        Button(action: {
-                            copyToClipboard(item.text)
-                        }) {
-                            Image(systemName: "clipboard")
+        VStack {
+            NavigationSplitView {
+                List(selection: $selectedItem) {
+                    ForEach(items.sorted { $0.name < $1.name }, id: \.self) { item in
+                        HStack {
+                            Text("\(item.name)")
+                            Spacer()
+                            Button(action: {
+                                copyToClipboard(item.text)
+                            }) {
+                                Image(systemName: "clipboard")
+                            }
+                        }.onTapGesture {
+                            selectedItem = item
                         }
-                    }.onTapGesture {
-                        selectedItem = item
                     }
                 }
-            }
-            .listStyle(.sidebar)
-            .onDeleteCommand {
-                if let item = selectedItem {
-                    modelContext.delete(item)
-                }
-            }
-            .navigationSplitViewColumnWidth(min: 280, ideal: 320)
-            .toolbar {
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-                ToolbarItem {
-                    Button(action: {
-                        do {
-                            try refreshList()
-                        } catch {
-                            // do nothing
-                        }
-                    }) {
-                        Label("Refresh", systemImage: "arrow.clockwise")
-                    }
-                }
-                ToolbarItem {
-                    Menu("JSON", systemImage: "tray") {
-                        Button("Backup", systemImage: "tray.and.arrow.down", action: backup)
-                        Button("Restore", systemImage: "tray.and.arrow.up", action: restore)
-                    }
-                }
-            }
-        } detail: {
-            NavigationStack {
-                ZStack {
+                .listStyle(.sidebar)
+                .onDeleteCommand {
                     if let item = selectedItem {
-                        ItemEditor(item: item) {
-                            selectedItem = nil
-                            modelContext.delete(item)
+                        modelContext.delete(item)
+                    }
+                }
+                .navigationSplitViewColumnWidth(min: 280, ideal: 320)
+                .toolbar {
+                    ToolbarItem {
+                        Button(action: addItem) {
+                            Label("Add Item", systemImage: "plus")
+                        }
+                    }
+                    ToolbarItem {
+                        Button(action: {
+                            do {
+                                try refreshList()
+                            } catch {
+                                // do nothing
+                            }
+                        }) {
+                            Label("Refresh", systemImage: "arrow.clockwise")
+                        }
+                    }
+                    ToolbarItem {
+                        Menu("JSON", systemImage: "tray") {
+                            Button("Backup", systemImage: "tray.and.arrow.down", action: backup)
+                            Button("Restore", systemImage: "tray.and.arrow.up", action: restore)
                         }
                     }
                 }
+            } detail: {
+                NavigationStack {
+                    ZStack {
+                        if let item = selectedItem {
+                            ItemEditor(item: item) {
+                                selectedItem = nil
+                                modelContext.delete(item)
+                            }
+                        }
+                    }
+                }
+            }
+            .alert(
+                "Copied to clipboard",
+                isPresented: $showingCopiedToClipboardAlert,
+                actions: {
+                    Button(action: {
+                        showingCopiedToClipboardAlert.toggle()
+                    }) {
+                        Text("OK")
+                    }
+                },
+                message: {
+                    Text("Copied the \(clipboardName) to the clipboard.")
+                }
+            )
+            .alert(
+                backupOperation == .backup
+                ? "ERROR: Failed to backup"
+                : "ERROR: Failed to restore",
+                isPresented: $showingBackupRestoreErrorAlert,
+                actions: {
+                    Button(action: {
+                        showingBackupRestoreErrorAlert.toggle()
+                    }) {
+                        Text("OK")
+                    }
+                },
+                message: {
+                    Text(backupOperation == .backup
+                         ? "Could to backup to the clipboard: \(exceptionError)"
+                         : "Could to restore from the clipboard: \(exceptionError)")
+                    .accentColor(.red)
+                }
+            )
+            HStack {
+                Image(systemName: syncMonitor.syncStateSummary.symbolName)
+                    .foregroundColor(syncMonitor.syncStateSummary.symbolColor)
+                    .help(syncMonitor.syncStateSummary.description)
+                if showSyncAccountStatus {
+                    if case .accountNotAvailable = syncMonitor.syncStateSummary {
+                        Text("Not logged into iCloud account, changes will not be synced to iCloud storage")
+                    }
+                }
+                Spacer()
+            }
+            .padding([.top], 2)
+            .padding([.bottom, .leading], 12)
+            .task {
+                do {
+                    try await Task.sleep(nanoseconds: 5_000_000_000)
+                    showSyncAccountStatus = true
+                } catch {}
             }
         }
-        .alert(
-            "Copied to clipboard",
-            isPresented: $showingCopiedToClipboardAlert,
-            actions: {
-                Button(action: {
-                    showingCopiedToClipboardAlert.toggle()
-                }) {
-                    Text("OK")
-                }
-            },
-            message: {
-                Text("Copied the \(clipboardName) to the clipboard.")
-            }
-        )
-        .alert(
-            backupOperation == .backup
-            ? "ERROR: Failed to backup"
-            : "ERROR: Failed to restore",
-            isPresented: $showingBackupRestoreErrorAlert,
-            actions: {
-                Button(action: {
-                    showingBackupRestoreErrorAlert.toggle()
-                }) {
-                    Text("OK")
-                }
-            },
-            message: {
-                Text(backupOperation == .backup
-                     ? "Could to backup to the clipboard: \(exceptionError)"
-                     : "Could to restore from the clipboard: \(exceptionError)")
-                .accentColor(.red)
-            }
-        )
     }
     
     private func addItem() {
