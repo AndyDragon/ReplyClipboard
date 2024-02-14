@@ -8,6 +8,14 @@
 import SwiftUI
 import SwiftData
 
+struct CloudKitConfiguration {
+#if CLOUDSYNC
+    static var Enabled = true
+#else
+    static var Enabled = false
+#endif
+}
+
 @main
 struct ReplyClipboardApp: App {
     var sharedModelContainer: ModelContainer = {
@@ -17,7 +25,7 @@ struct ReplyClipboardApp: App {
         let modelConfiguration = ModelConfiguration(
             schema: schema,
             isStoredInMemoryOnly: false,
-            cloudKitDatabase: .private("iCloud.com.andydragon.ReplyClipboard"))
+            cloudKitDatabase: CloudKitConfiguration.Enabled ? .automatic : .none)
 
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
