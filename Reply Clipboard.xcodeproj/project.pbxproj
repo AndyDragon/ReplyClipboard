@@ -14,6 +14,7 @@
 		492DC2032B79A1E4004BC668 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 492DC2022B79A1E4004BC668 /* Assets.xcassets */; };
 		492DC2062B79A1E4004BC668 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 492DC2052B79A1E4004BC668 /* Preview Assets.xcassets */; };
 		492DC20E2B79B59A004BC668 /* ItemEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492DC20D2B79B59A004BC668 /* ItemEditor.swift */; };
+		4950CE382B7CF4FF00C401B3 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 4950CE372B7CF4FF00C401B3 /* AlertToast */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4918AC1F2B7C23200078BC00 /* CloudKitSyncMonitor in Frameworks */,
+				4950CE382B7CF4FF00C401B3 /* AlertToast in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,6 +99,7 @@
 			name = "Reply Clipboard";
 			packageProductDependencies = (
 				4918AC1E2B7C23200078BC00 /* CloudKitSyncMonitor */,
+				4950CE372B7CF4FF00C401B3 /* AlertToast */,
 			);
 			productName = "Reply Clipboard";
 			productReference = 492DC1F92B79A1E3004BC668 /* Reply Clipboard.app */;
@@ -128,6 +131,7 @@
 			mainGroup = 492DC1F02B79A1E3004BC668;
 			packageReferences = (
 				4918AC1D2B7C23200078BC00 /* XCRemoteSwiftPackageReference "CloudKitSyncMonitor" */,
+				4950CE362B7CF4FF00C401B3 /* XCRemoteSwiftPackageReference "AlertToast" */,
 			);
 			productRefGroup = 492DC1FA2B79A1E3004BC668 /* Products */;
 			projectDirPath = "";
@@ -293,7 +297,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"Reply Clipboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 7U6K972H9Q;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -326,7 +330,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_ASSET_PATHS = "\"Reply Clipboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 7U6K972H9Q;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -381,6 +385,14 @@
 				minimumVersion = 1.2.1;
 			};
 		};
+		4950CE362B7CF4FF00C401B3 /* XCRemoteSwiftPackageReference "AlertToast" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/elai950/AlertToast.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -388,6 +400,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4918AC1D2B7C23200078BC00 /* XCRemoteSwiftPackageReference "CloudKitSyncMonitor" */;
 			productName = CloudKitSyncMonitor;
+		};
+		4950CE372B7CF4FF00C401B3 /* AlertToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4950CE362B7CF4FF00C401B3 /* XCRemoteSwiftPackageReference "AlertToast" */;
+			productName = AlertToast;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import AlertToast
 import CloudKitSyncMonitor
 
 enum BackupOperation: Int, Codable, CaseIterable {
@@ -19,12 +20,18 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
     @State private var selectedItem: Item?
-    @State private var showingCopiedToClipboardAlert = false
-    @State private var clipboardName = ""
     @State private var exceptionError = ""
     @State private var backupOperation = BackupOperation.none
     @State private var showingBackupRestoreErrorAlert = false
     @State private var showSyncAccountStatus = false
+    @State private var toastType: AlertToast.AlertType = .regular
+    @State private var toastText = ""
+    @State private var toastSubTitle = ""
+    @State private var toastDuration = 3.0
+    @State private var showToast = false
+    @State private var deleteAlertText = ""
+    @State private var deleteAlertAction: (() -> Void)? = nil
+    @State private var showDeleteAlert = false
     @ObservedObject private var syncMonitor = SyncMonitor.shared
     
     var body: some View {
@@ -37,6 +44,7 @@ struct ContentView: View {
                             Spacer()
                             Button(action: {
                                 copyToClipboard(item.text)
+                                showToast("Copied!", "Copied \(item.name) to the clipboard")
                             }) {
                                 Image(systemName: "clipboard")
                             }
@@ -59,16 +67,33 @@ struct ContentView: View {
                     }
                 }
             } detail: {
-                NavigationStack {
-                    ZStack {
-                        if let item = selectedItem {
-                            ItemEditor(item: item) {
+                VStack {
+                    if let item = selectedItem {
+                        ItemEditor(item: item) {
+                            deleteAlertText = "Are you sure you want to delete this item?"
+                            deleteAlertAction = {
                                 selectedItem = nil
                                 modelContext.delete(item)
+                                showToast("Deleted item!", "Removed the item", duration: 15.0)
                             }
+                            showDeleteAlert.toggle()
+                        }
+                    } else {
+                        HStack {
+                            Spacer()
+                            Text("Select item from the list to edit")
+                                .foregroundColor(.gray)
+                            Spacer()
                         }
                     }
                 }
+                .toast(isPresenting: $showToast, duration: 2, tapToDismiss: true, alert: {
+                    AlertToast(
+                        displayMode: .hud,
+                        type: toastType,
+                        title: toastText,
+                        subTitle: toastSubTitle)
+                })
                 .toolbar {
                     Menu("JSON", systemImage: "tray") {
                         Button("Backup to Clipboard", systemImage: "tray.and.arrow.down", action: backup)
@@ -77,23 +102,19 @@ struct ContentView: View {
                 }
             }
             .alert(
-                "Copied to clipboard",
-                isPresented: $showingCopiedToClipboardAlert,
+                "Delete confirmation",
+                isPresented: $showDeleteAlert,
                 actions: {
-                    Button(action: {
-                        showingCopiedToClipboardAlert.toggle()
-                    }) {
-                        Text("OK")
+                    Button(role: .destructive, action: deleteAlertAction ?? { }) {
+                        Text("Yes")
                     }
                 },
                 message: {
-                    Text("Copied the \(clipboardName) to the clipboard.")
+                    Text(deleteAlertText)
                 }
             )
             .alert(
-                backupOperation == .backup
-                ? "ERROR: Failed to backup"
-                : "ERROR: Failed to restore",
+                backupOperation == .backup ? "ERROR: Failed to backup" : "ERROR: Failed to restore",
                 isPresented: $showingBackupRestoreErrorAlert,
                 actions: {
                     Button(action: {
@@ -129,6 +150,14 @@ struct ContentView: View {
                 } catch {}
             }
         }
+    }
+    
+    func showToast(_ text: String, _ subTitle: String, duration: Double = 3.0) {
+        toastType = .complete(.blue)
+        toastText = text
+        toastSubTitle = subTitle
+        toastDuration = duration
+        showToast.toggle()
     }
     
     private func addItem() {
@@ -183,8 +212,7 @@ struct ContentView: View {
             encoder.outputFormatting = [.sortedKeys, .prettyPrinted]
             let json = try encoder.encode(items.sorted { $0.name < $1.name })
             copyToClipboardRaw(String(decoding: json, as: UTF8.self))
-            clipboardName = "backup"
-            showingCopiedToClipboardAlert.toggle()
+            showToast("Backed up!", "Copied a backup of the items to the clipboard")
         } catch {
             exceptionError = error.localizedDescription
             backupOperation = .backup
@@ -208,6 +236,7 @@ struct ContentView: View {
                 for item in loadedItems.sorted(by: { $0.name < $1.name }) {
                     modelContext.insert(item)
                 }
+                showToast("Restored!", "Restored the items from the clipboard")
             }
         } catch let DecodingError.dataCorrupted(context) {
             exceptionError = context.debugDescription
