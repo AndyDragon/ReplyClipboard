@@ -17,7 +17,7 @@ enum BackupOperation: Int, Codable, CaseIterable {
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Item.timestamp) private var items: [Item]
+    @Query private var items: [Item]
     @State private var selectedItem: Item?
     @State private var showingCopiedToClipboardAlert = false
     @State private var clipboardName = ""
@@ -40,7 +40,8 @@ struct ContentView: View {
                             }) {
                                 Image(systemName: "clipboard")
                             }
-                        }.onTapGesture {
+                        }
+                        .onTapGesture {
                             selectedItem = item
                         }
                     }
@@ -53,27 +54,8 @@ struct ContentView: View {
                 }
                 .navigationSplitViewColumnWidth(min: 280, ideal: 320)
                 .toolbar {
-                    ToolbarItem {
-                        Button(action: addItem) {
-                            Label("Add Item", systemImage: "plus")
-                        }
-                    }
-                    ToolbarItem {
-                        Button(action: {
-                            do {
-                                try refreshList()
-                            } catch {
-                                // do nothing
-                            }
-                        }) {
-                            Label("Refresh", systemImage: "arrow.clockwise")
-                        }
-                    }
-                    ToolbarItem {
-                        Menu("JSON", systemImage: "tray") {
-                            Button("Backup", systemImage: "tray.and.arrow.down", action: backup)
-                            Button("Restore", systemImage: "tray.and.arrow.up", action: restore)
-                        }
+                    Button(action: addItem) {
+                        Label("Add Item", systemImage: "plus")
                     }
                 }
             } detail: {
@@ -85,6 +67,12 @@ struct ContentView: View {
                                 modelContext.delete(item)
                             }
                         }
+                    }
+                }
+                .toolbar {
+                    Menu("JSON", systemImage: "tray") {
+                        Button("Backup to Clipboard", systemImage: "tray.and.arrow.down", action: backup)
+                        Button("Restore from Clipboard", systemImage: "tray.and.arrow.up", action: restore)
                     }
                 }
             }
@@ -145,7 +133,7 @@ struct ContentView: View {
     
     private func addItem() {
         withAnimation {
-            let newItem = Item(name: "new item", text: "", timestamp: Date())
+            let newItem = Item(name: "new item", text: "")
             modelContext.insert(newItem)
             selectedItem = newItem
         }
@@ -189,22 +177,6 @@ struct ContentView: View {
 #endif
     }
     
-    func refreshList() throws -> Void {
-        selectedItem = nil
-        var sortedItems = [Item]()
-        items.sorted { $0.name < $1.name }.forEach { item in
-            sortedItems.append(Item(name: item.name, text: item.text))
-        }
-        do {
-            try modelContext.delete(model: Item.self)
-        } catch {
-            // do nothing
-        }
-        for item in sortedItems {
-            modelContext.insert(item)
-        }
-    }
-
     func backup() -> Void {
         do {
             let encoder = JSONEncoder()

@@ -13,15 +13,18 @@ final class Item: Codable, Comparable, Identifiable {
     var id: UUID = UUID()
     var name: String = ""
     var text: String = ""
-    var timestamp: Date = Date.now
     
-    init(name: String, text: String, timestamp: Date = .now) {
-        self.id = UUID()
+    init(name: String, text: String) {
         self.name = name
         self.text = text
-        self.timestamp = timestamp
     }
-    
+
+    init(id: UUID, name: String, text: String) {
+        self.id = id
+        self.name = name
+        self.text = text
+    }
+
     static func == (lhs: Item, rhs: Item) -> Bool {
         return lhs.id == rhs.id
     }
@@ -38,10 +41,9 @@ final class Item: Codable, Comparable, Identifiable {
 
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(UUID.self, forKey: .id)
+        id = try container.decodeIfPresent(UUID.self, forKey: .id) ?? UUID()
         name = try container.decode(String.self, forKey: .name)
         text = try container.decode(String.self, forKey: .text)
-        timestamp = .now
     }
 
     func encode(to encoder: Encoder) throws {
