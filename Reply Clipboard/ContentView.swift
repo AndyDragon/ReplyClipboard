@@ -17,6 +17,7 @@ enum BackupOperation: Int, Codable, CaseIterable {
 }
 
 struct ContentView: View {
+    @Environment(\.openURL) var openURL
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
     @State private var selectedItem: Item?
@@ -28,140 +29,230 @@ struct ContentView: View {
     @State private var toastText = ""
     @State private var toastSubTitle = ""
     @State private var toastDuration = 3.0
-    @State private var showToast = false
+    @State private var isShowingToast = false
     @State private var deleteAlertText = ""
     @State private var deleteAlertAction: (() -> Void)? = nil
     @State private var showDeleteAlert = false
     @ObservedObject private var syncMonitor = SyncMonitor.shared
-    
+    var appState: VersionCheckAppState
+    private var isAnyToastShowing: Bool {
+        isShowingToast || appState.isShowingVersionAvailableToast.wrappedValue || appState.isShowingVersionRequiredToast.wrappedValue
+    }
+
+    init(_ appState: VersionCheckAppState) {
+        self.appState = appState
+    }
+
     var body: some View {
-        VStack {
-            NavigationSplitView {
-                List(selection: $selectedItem) {
-                    ForEach(items.sorted { $0.name < $1.name }, id: \.self) { item in
-                        HStack {
-                            Text("\(item.name)")
-                            Spacer()
-                            Button(action: {
-                                copyToClipboard(item.text)
-                                showToast("Copied!", "Copied \(item.name) to the clipboard")
-                            }) {
-                                Image(systemName: "clipboard")
+        ZStack {
+            VStack {
+                NavigationSplitView {
+                    VStack {
+                        List(selection: $selectedItem) {
+                            ForEach(items.sorted { $0.name < $1.name }, id: \.self) { item in
+                                HStack {
+                                    Text("\(item.name)")
+                                    Spacer()
+                                    Button(action: {
+                                        copyToClipboard(item.text)
+                                        showToast("Copied!", "Copied \(item.name) to the clipboard")
+                                    }) {
+                                        HStack {
+                                            Image(systemName: "clipboard")
+                                                .frame(alignment: .center)
+                                            Text("Copy")
+                                                .frame(alignment: .center)
+                                        }
+                                    }
+                                }
+                                .padding(4)
+                                .onTapGesture {
+                                    selectedItem = item
+                                }
                             }
                         }
-                        .onTapGesture {
-                            selectedItem = item
-                        }
-                    }
-                }
-                .listStyle(.sidebar)
-                .onDeleteCommand {
-                    if let item = selectedItem {
-                        modelContext.delete(item)
-                    }
-                }
-                .navigationSplitViewColumnWidth(min: 280, ideal: 320)
-                .toolbar {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            } detail: {
-                VStack {
-                    if let item = selectedItem {
-                        ItemEditor(item: item) {
-                            deleteAlertText = "Are you sure you want to delete this item?"
-                            deleteAlertAction = {
-                                selectedItem = nil
+                        .listStyle(.sidebar)
+                        .onDeleteCommand {
+                            if let item = selectedItem {
                                 modelContext.delete(item)
-                                showToast("Deleted item!", "Removed the item", duration: 15.0)
                             }
-                            showDeleteAlert.toggle()
                         }
-                    } else {
-                        HStack {
-                            Spacer()
-                            Text("Select item from the list to edit")
-                                .foregroundColor(.gray)
-                            Spacer()
+                        .navigationSplitViewColumnWidth(min: 280, ideal: 320)
+                        .toolbar {
+                            Button(action: addItem) {
+                                Label("Add Item", systemImage: "plus")
+                            }
+                            .disabled(isAnyToastShowing)
+                        }
+                        .background(Color.gray.opacity(0.000001))
+                        .onTapGesture {
+                            selectedItem = nil
                         }
                     }
+                } detail: {
+                    VStack {
+                        if let item = selectedItem {
+                            ItemEditor(item: item, onClose: { selectedItem = nil }) {
+                                deleteAlertText = "Are you sure you want to delete this item?"
+                                deleteAlertAction = {
+                                    selectedItem = nil
+                                    modelContext.delete(item)
+                                    showToast("Deleted item!", "Removed the item", duration: 15.0)
+                                }
+                                showDeleteAlert.toggle()
+                            }
+                        } else {
+                            HStack {
+                                Spacer()
+                                Text("Select item from the list to edit")
+                                    .foregroundColor(.gray)
+                                Spacer()
+                            }
+                        }
+                    }
+                    .toolbar {
+                        Menu("JSON", systemImage: "tray") {
+                            Button("Backup to Clipboard", systemImage: "tray.and.arrow.down", action: backup)
+                            Button("Restore from Clipboard", systemImage: "tray.and.arrow.up", action: restore)
+                        }
+                        .disabled(isAnyToastShowing)
+                    }
                 }
-                .toast(isPresenting: $showToast, duration: 2, tapToDismiss: true, alert: {
-                    AlertToast(
-                        displayMode: .hud,
-                        type: toastType,
-                        title: toastText,
-                        subTitle: toastSubTitle)
-                })
-                .toolbar {
-                    Menu("JSON", systemImage: "tray") {
-                        Button("Backup to Clipboard", systemImage: "tray.and.arrow.down", action: backup)
-                        Button("Restore from Clipboard", systemImage: "tray.and.arrow.up", action: restore)
+                .alert(
+                    "Delete confirmation",
+                    isPresented: $showDeleteAlert,
+                    actions: {
+                        Button(role: .destructive, action: deleteAlertAction ?? { }) {
+                            Text("Yes")
+                        }
+                    },
+                    message: {
+                        Text(deleteAlertText)
+                    }
+                )
+                .alert(
+                    backupOperation == .backup ? "ERROR: Failed to backup" : "ERROR: Failed to restore",
+                    isPresented: $showingBackupRestoreErrorAlert,
+                    actions: {
+                        Button(action: {
+                            showingBackupRestoreErrorAlert.toggle()
+                        }) {
+                            Text("OK")
+                        }
+                    },
+                    message: {
+                        Text(backupOperation == .backup
+                             ? "Could to backup to the clipboard: \(exceptionError)"
+                             : "Could to restore from the clipboard: \(exceptionError)")
+                        .accentColor(.red)
+                    }
+                )
+                if CloudKitConfiguration.Enabled {
+                    HStack {
+                        Image(systemName: syncMonitor.syncStateSummary.symbolName)
+                            .foregroundColor(syncMonitor.syncStateSummary.symbolColor)
+                            .help(syncMonitor.syncError
+                                  ? (syncMonitor.syncStateSummary.description + " " + (syncMonitor.lastError?.localizedDescription ?? "unknown"))
+                                  : syncMonitor.syncStateSummary.description)
+                        if showSyncAccountStatus {
+                            if case .accountNotAvailable = syncMonitor.syncStateSummary {
+                                Text("Not logged into iCloud account, changes will not be synced to iCloud storage")
+                            }
+                        }
+                        Spacer()
+                    }
+                    .padding([.top], 2)
+                    .padding([.bottom, .leading], 12)
+                    .task {
+                        do {
+                            try await Task.sleep(nanoseconds: 5_000_000_000)
+                            showSyncAccountStatus = true
+                        } catch {}
                     }
                 }
             }
-            .alert(
-                "Delete confirmation",
-                isPresented: $showDeleteAlert,
-                actions: {
-                    Button(role: .destructive, action: deleteAlertAction ?? { }) {
-                        Text("Yes")
-                    }
-                },
-                message: {
-                    Text(deleteAlertText)
+            .padding()
+            .allowsHitTesting(!isAnyToastShowing)
+            if isAnyToastShowing {
+                VStack {
+                    Rectangle().opacity(0.0000001)
                 }
-            )
-            .alert(
-                backupOperation == .backup ? "ERROR: Failed to backup" : "ERROR: Failed to restore",
-                isPresented: $showingBackupRestoreErrorAlert,
-                actions: {
-                    Button(action: {
-                        showingBackupRestoreErrorAlert.toggle()
-                    }) {
-                        Text("OK")
+                .onTapGesture {
+                    if isShowingToast {
+                        isShowingToast.toggle()
+                    } else if appState.isShowingVersionAvailableToast.wrappedValue {
+                        appState.isShowingVersionAvailableToast.wrappedValue.toggle()
                     }
-                },
-                message: {
-                    Text(backupOperation == .backup
-                         ? "Could to backup to the clipboard: \(exceptionError)"
-                         : "Could to restore from the clipboard: \(exceptionError)")
-                    .accentColor(.red)
-                }
-            )
-            if CloudKitConfiguration.Enabled {
-                HStack {
-                    Image(systemName: syncMonitor.syncStateSummary.symbolName)
-                        .foregroundColor(syncMonitor.syncStateSummary.symbolColor)
-                        .help(syncMonitor.syncStateSummary.description)
-                    if showSyncAccountStatus {
-                        if case .accountNotAvailable = syncMonitor.syncStateSummary {
-                            Text("Not logged into iCloud account, changes will not be synced to iCloud storage")
-                        }
-                    }
-                    Spacer()
-                }
-                .padding([.top], 2)
-                .padding([.bottom, .leading], 12)
-                .task {
-                    do {
-                        try await Task.sleep(nanoseconds: 5_000_000_000)
-                        showSyncAccountStatus = true
-                    } catch {}
                 }
             }
         }
+        .blur(radius: isAnyToastShowing ? 4 : 0)
+        .toast(
+            isPresenting: $isShowingToast,
+            duration: 1,
+            tapToDismiss: true,
+            offsetY: 32,
+            alert: {
+                AlertToast(
+                    displayMode: .hud,
+                    type: toastType,
+                    title: toastText,
+                    subTitle: toastSubTitle)
+            })
+        .toast(
+            isPresenting: appState.isShowingVersionAvailableToast,
+            duration: 10,
+            tapToDismiss: true,
+            offsetY: 32,
+            alert: {
+                AlertToast(
+                    displayMode: .hud,
+                    type: .systemImage("exclamationmark.triangle.fill", .yellow),
+                    title: "New version available",
+                    subTitle: "You are using v\(appState.versionCheckToast.wrappedValue.appVersion) and v\(appState.versionCheckToast.wrappedValue.currentVersion) is available\(appState.versionCheckToast.wrappedValue.linkToCurrentVersion.isEmpty ? "" : ", click here to open your browser") (this will go away in 10 seconds)")
+            },
+            onTap: {
+                if let url = URL(string: appState.versionCheckToast.wrappedValue.linkToCurrentVersion) {
+                    openURL(url)
+                }
+            },
+            completion: {
+                appState.resetCheckingForUpdates()
+            })
+        .toast(
+            isPresenting: appState.isShowingVersionRequiredToast,
+            duration: 0,
+            tapToDismiss: true,
+            offsetY: 32,
+            alert: {
+                AlertToast(
+                    displayMode: .hud,
+                    type: .systemImage("xmark.octagon.fill", .red),
+                    title: "New version required",
+                    subTitle: "You are using v\(appState.versionCheckToast.wrappedValue.appVersion) and v\(appState.versionCheckToast.wrappedValue.currentVersion) is required\(appState.versionCheckToast.wrappedValue.linkToCurrentVersion.isEmpty ? "" : ", click here to open your browser") or ⌘ + Q to Quit")
+            },
+            onTap: {
+                if let url = URL(string: appState.versionCheckToast.wrappedValue.linkToCurrentVersion) {
+                    openURL(url)
+                    NSApplication.shared.terminate(nil)
+                }
+            },
+            completion: {
+                appState.resetCheckingForUpdates()
+            })
+        .task {
+            appState.checkForUpdates()
+        }
     }
-    
+
     func showToast(_ text: String, _ subTitle: String, duration: Double = 3.0) {
         toastType = .complete(.blue)
         toastText = text
         toastSubTitle = subTitle
         toastDuration = duration
-        showToast.toggle()
+        isShowingToast.toggle()
     }
-    
+
     private func addItem() {
         withAnimation {
             let newItem = Item(name: "new item", text: "")
@@ -169,7 +260,7 @@ struct ContentView: View {
             selectedItem = newItem
         }
     }
-    
+
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             for index in offsets {
@@ -177,7 +268,7 @@ struct ContentView: View {
             }
         }
     }
-    
+
     private func copyToClipboard(_ text: String) -> Void {
 #if os(iOS)
         var clipText = String(text)
@@ -197,7 +288,7 @@ struct ContentView: View {
         pasteBoard.writeObjects([clipText as NSString])
 #endif
     }
-    
+
     func copyToClipboardRaw(_ text: String) -> Void {
 #if os(iOS)
         UIPasteboard.general.string = text
@@ -207,7 +298,7 @@ struct ContentView: View {
         pasteBoard.writeObjects([text as NSString])
 #endif
     }
-    
+
     func backup() -> Void {
         do {
             let encoder = JSONEncoder()
@@ -221,7 +312,7 @@ struct ContentView: View {
             showingBackupRestoreErrorAlert.toggle()
         }
     }
-    
+
     func restore() -> Void {
         do {
             selectedItem = nil
@@ -262,9 +353,4 @@ struct ContentView: View {
             showingBackupRestoreErrorAlert.toggle()
         }
     }
-}
-
-#Preview {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }

@@ -14,12 +14,14 @@ class ItemWrapper {
 
 struct ItemEditor: View {
     var item: Item
+    var onClose: () -> Void
     var onDelete: () -> Void
     var wrapper = ItemWrapper()
     
-    init(item: Item, onDelete: @escaping () -> Void) {
+    init(item: Item, onClose: (() -> Void)?, onDelete: @escaping () -> Void) {
         self.item = item
         self.onDelete = onDelete
+        self.onClose = onClose ?? {}
         wrapper.name = item.name
         wrapper.text = item.text
     }
@@ -30,6 +32,9 @@ struct ItemEditor: View {
                 Spacer()
                 Button(action: onDelete) {
                     Image(systemName: "trash")
+                }
+                Button(action: onClose) {
+                    Image(systemName: "xmark")
                 }
             }.padding([.bottom], 12)
             HStack {
