@@ -45,7 +45,12 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            VStack {
+            VStack(spacing: 0) {
+                HStack(alignment: .center) {
+                    Spacer()
+                }
+                .frame(height: 1)
+                .border(.black, edges: [.top], width: 1)
                 NavigationSplitView {
                     VStack {
                         List(selection: $selectedItem) {
@@ -85,6 +90,7 @@ struct ContentView: View {
                             .disabled(isAnyToastShowing)
                         }
                         .background(Color.gray.opacity(0.000001))
+                        .border(.black, edges: [.bottom], width: 1)
                         .onTapGesture {
                             selectedItem = nil
                         }
@@ -162,7 +168,7 @@ struct ContentView: View {
                         }
                         Spacer()
                     }
-                    .padding([.top], 2)
+                    .padding([.top], 8)
                     .padding([.bottom, .leading], 12)
                     .task {
                         do {
@@ -172,7 +178,7 @@ struct ContentView: View {
                     }
                 }
             }
-            .padding([.top], 1) // Very important, do not remove of list will jump on toast...
+            //.padding([.top], 1) // Very important, do not remove of list will jump on toast...
             .allowsHitTesting(!isAnyToastShowing)
             if isAnyToastShowing {
                 VStack {
@@ -245,7 +251,7 @@ struct ContentView: View {
             appState.checkForUpdates()
         }
     }
-
+    
     func showToast(_ text: String, _ subTitle: String, duration: Double = 3.0) {
         toastType = .complete(.blue)
         toastText = text
