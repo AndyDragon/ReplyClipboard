@@ -15,6 +15,9 @@
 		492DC2062B79A1E4004BC668 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 492DC2052B79A1E4004BC668 /* Preview Assets.xcassets */; };
 		492DC20E2B79B59A004BC668 /* ItemEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492DC20D2B79B59A004BC668 /* ItemEditor.swift */; };
 		4950CE382B7CF4FF00C401B3 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 4950CE372B7CF4FF00C401B3 /* AlertToast */; };
+		4965D1D82B82829500DBCA73 /* ToastDismissShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4965D1D72B82829500DBCA73 /* ToastDismissShield.swift */; };
+		4965D1DA2B8285BA00DBCA73 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4965D1D92B8285BA00DBCA73 /* Types.swift */; };
+		4965D1DC2B82861700DBCA73 /* VersionCheckAppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4965D1DB2B82861700DBCA73 /* VersionCheckAppState.swift */; };
 		499038F02B81120F007A9449 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499038EF2B81120F007A9449 /* Helpers.swift */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +31,9 @@
 		492DC2072B79A1E4004BC668 /* ReplyClipboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ReplyClipboard.entitlements; sourceTree = "<group>"; };
 		492DC20D2B79B59A004BC668 /* ItemEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditor.swift; sourceTree = "<group>"; };
 		494E835E2B7A8AC60028BE37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
+		4965D1D72B82829500DBCA73 /* ToastDismissShield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastDismissShield.swift; sourceTree = "<group>"; };
+		4965D1D92B8285BA00DBCA73 /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
+		4965D1DB2B82861700DBCA73 /* VersionCheckAppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCheckAppState.swift; sourceTree = "<group>"; };
 		499038EF2B81120F007A9449 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		49FAC3882B7D5C4E0054D2D3 /* CloudSync.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = CloudSync.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -67,9 +73,12 @@
 				494E835E2B7A8AC60028BE37 /* Info.plist */,
 				492DC1FC2B79A1E3004BC668 /* ReplyClipboardApp.swift */,
 				492DC1FE2B79A1E3004BC668 /* ContentView.swift */,
-				492DC20D2B79B59A004BC668 /* ItemEditor.swift */,
 				492DC2002B79A1E3004BC668 /* Item.swift */,
+				492DC20D2B79B59A004BC668 /* ItemEditor.swift */,
 				499038EF2B81120F007A9449 /* Helpers.swift */,
+				4965D1D72B82829500DBCA73 /* ToastDismissShield.swift */,
+				4965D1D92B8285BA00DBCA73 /* Types.swift */,
+				4965D1DB2B82861700DBCA73 /* VersionCheckAppState.swift */,
 				492DC2022B79A1E4004BC668 /* Assets.xcassets */,
 				492DC2072B79A1E4004BC668 /* ReplyClipboard.entitlements */,
 				49FAC3882B7D5C4E0054D2D3 /* CloudSync.xcconfig */,
@@ -165,7 +174,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				492DC1FF2B79A1E3004BC668 /* ContentView.swift in Sources */,
+				4965D1D82B82829500DBCA73 /* ToastDismissShield.swift in Sources */,
 				492DC20E2B79B59A004BC668 /* ItemEditor.swift in Sources */,
+				4965D1DC2B82861700DBCA73 /* VersionCheckAppState.swift in Sources */,
+				4965D1DA2B8285BA00DBCA73 /* Types.swift in Sources */,
 				492DC2012B79A1E3004BC668 /* Item.swift in Sources */,
 				499038F02B81120F007A9449 /* Helpers.swift in Sources */,
 				492DC1FD2B79A1E3004BC668 /* ReplyClipboardApp.swift in Sources */,
@@ -305,7 +317,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Reply Clipboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 7U6K972H9Q;
@@ -339,7 +351,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Reply Clipboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 7U6K972H9Q;
@@ -431,7 +443,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Reply Clipboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 7U6K972H9Q;

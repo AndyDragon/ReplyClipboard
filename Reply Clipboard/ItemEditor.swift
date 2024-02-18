@@ -7,28 +7,14 @@
 
 import SwiftUI
 
-class ItemWrapper {
-    @Published var name: String = ""
-    @Published var text: String = ""
-}
-
 struct ItemEditor: View {
-    var item: Item
+    @Bindable var item: Item
     var onClose: () -> Void
     var onDelete: () -> Void
-    var wrapper = ItemWrapper()
-    
-    init(item: Item, onClose: (() -> Void)?, onDelete: @escaping () -> Void) {
-        self.item = item
-        self.onDelete = onDelete
-        self.onClose = onClose ?? {}
-        wrapper.name = item.name
-        wrapper.text = item.text
-    }
     
     var body: some View {
-        VStack {
-            HStack {
+        VStack(spacing: 12) {
+            HStack(spacing: 12) {
                 Spacer()
                 Button(action: onDelete) {
                     Image(systemName: "trash")
@@ -36,34 +22,20 @@ struct ItemEditor: View {
                 Button(action: onClose) {
                     Image(systemName: "xmark")
                 }
-            }.padding([.bottom], 12)
-            HStack {
-                let nameBinding = Binding<String>(
-                    get: { wrapper.name },
-                    set: { wrapper.name = $0 }
-                )
+            }
+            HStack(spacing: 12) {
                 Text("Name:")
-                    .frame(width: 60)
-                TextField("Enter the name for the item", text: nameBinding)
+                    .frame(alignment: .center)
+                TextField("Enter the name for the item", text: $item.name)
+                    .frame(alignment: .center)
             }
-            HStack {
-                let textBinding = Binding(
-                    get: { wrapper.text },
-                    set: { wrapper.text = $0 })
+            HStack(spacing: 12) {
                 Text("Text:")
-                    .frame(width: 60)
-                TextField("Enter the text for the item", text: textBinding)
+                    .frame(alignment: .center)
+                TextField("Enter the text for the item", text: $item.text)
+                    .frame(alignment: .center)
             }
-            HStack {
-                Button(action: {
-                    item.name = wrapper.name
-                    item.text = wrapper.text
-                }) {
-                    Text("Save")
-                }
-            }
-            Spacer()
         }
-        .padding(20)
+        .padding()
     }
 }

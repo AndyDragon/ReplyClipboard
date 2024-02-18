@@ -9,8 +9,8 @@ import Foundation
 import SwiftData
 
 @Model
-final class Item: Codable, Comparable, Identifiable {
-    var id: UUID = UUID()
+final class Item {
+    @Transient var id: UUID = UUID()
     var name: String = ""
     var text: String = ""
     
@@ -24,13 +24,21 @@ final class Item: Codable, Comparable, Identifiable {
         self.name = name
         self.text = text
     }
+}
 
-    static func == (lhs: Item, rhs: Item) -> Bool {
-        return lhs.id == rhs.id
+class CodableItem: Codable {
+    @Transient var id: UUID = UUID()
+    var name: String = ""
+    var text: String = ""
+    
+    init(_ item: Item) {
+        self.id = item.id
+        self.name = item.name
+        self.text = item.text
     }
     
-    static func < (lhs: Item, rhs: Item) -> Bool {
-        return lhs.name < rhs.name
+    func toItem() -> Item {
+        return Item(id: id, name: name, text: text)
     }
     
     enum CodingKeys: CodingKey {
@@ -38,14 +46,14 @@ final class Item: Codable, Comparable, Identifiable {
         case name
         case text
     }
-
+    
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decodeIfPresent(UUID.self, forKey: .id) ?? UUID()
         name = try container.decode(String.self, forKey: .name)
         text = try container.decode(String.self, forKey: .text)
     }
-
+    
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
