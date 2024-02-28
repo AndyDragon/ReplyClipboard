@@ -1,4 +1,17 @@
-export const applicationName = "ReplyClipboard";
+export const applicationName = "Reply Clipboard";
+export const applicationDescription = "Reply Clipboard is a small utility app for text snippets.";
+export const applicationDetails = (
+    <>
+        This utility lets you store several short snippets of text, often for quick replies on Vero and allows
+        quick copy to clipboard without actually making the text visible. I use it for replies, user names for
+        accounts and congratulation posts. There is even a facility to have a clipboard placeholder in the
+        text so when you click Copy, it places any text clipboard contents in the snippet.
+    </>
+);
+export const macScreenshotWidth = 720;
+export const macScreenshotHeight = 340;
+
+export const deploymentWebLocation = "/app/replyclipboard";
 
 export const versionLocation = "replyclipboard/version.json";
 
