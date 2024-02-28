@@ -43,21 +43,5 @@ export const links: Record<Platform, Links | undefined> = {
             }
         ]
     },
-    windows: {
-        location: (_version, suffix) => `${windowsInstallerLocation}${suffix}`,
-        actions: [
-            {
-                name: "current",
-                action: "install",
-                target: "",
-                suffix: "/setup.exe",
-            },
-            {
-                name: "current",
-                action: "read more about",
-                target: "_blank",
-                suffix: "",
-            }
-        ]
-    },
+    windows: undefined,
 };
