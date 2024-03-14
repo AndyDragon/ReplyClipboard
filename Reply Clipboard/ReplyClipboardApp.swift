@@ -36,7 +36,8 @@ struct ReplyClipboardApp: App {
             isCheckingForUpdates: $checkingForUpdates,
             isShowingVersionAvailableToast: $isShowingVersionAvailableToast,
             isShowingVersionRequiredToast: $isShowingVersionRequiredToast,
-            versionCheckToast: $versionCheckToast)
+            versionCheckToast: $versionCheckToast,
+            versionLocation: "https://vero.andydragon.com/static/data/replyclipboard/version.json")
         WindowGroup {
             ContentView(appState)
         }

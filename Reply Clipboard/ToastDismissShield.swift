@@ -1,5 +1,5 @@
 //
-//  ToastDismissShielf.swift
+//  ToastDismissShield.swift
 //  Reply Clipboard
 //
 //  Created by Andrew Forget on 2024-02-18.
