@@ -1,2 +1,2 @@
-*.xcbkptlist
-**/xcuserdata/
+#*.xcbkptlist
+#**/xcuserdata/
