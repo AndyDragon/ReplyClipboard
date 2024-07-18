@@ -23,7 +23,7 @@ export const showMacV2Info = false;
 export const macV2DmgLocation = "replyclipboard/macos/Reply%20Clipboard%20";
 export const macV2ReleaseNotesLocation = "releaseNotes-mac_v2.json";
 
-export const showWindowsInfo = true;
+export const showWindowsInfo = false;
 export const windowsInstallerLocation = "replyclipboard/windows";
 export const windowsReleaseNotesLocation = "releaseNotes-windows.json";
 
