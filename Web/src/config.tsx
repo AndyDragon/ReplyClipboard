@@ -15,16 +15,25 @@ export const deploymentWebLocation = "/app/replyclipboard";
 
 export const versionLocation = "replyclipboard/version.json";
 
+export const showMacInfo = true;
 export const macDmgLocation = "replyclipboard/macos/Reply%20Clipboard%20";
 export const macReleaseNotesLocation = "releaseNotes-mac.json";
 
+export const showMacV2Info = false;
+export const macV2DmgLocation = "replyclipboard/macos/Reply%20Clipboard%20";
+export const macV2ReleaseNotesLocation = "releaseNotes-mac_v2.json";
+
+export const showWindowsInfo = true;
 export const windowsInstallerLocation = "replyclipboard/windows";
 export const windowsReleaseNotesLocation = "releaseNotes-windows.json";
 
-export type Platform = "macOS" | "windows";
+export const hasTutorial = false;
+
+export type Platform = "macOS" | "macOS_v2" | "windows";
 
 export const platformString: Record<Platform, string> = {
     macOS: "macOS",
+    macOS_v2: "macOS v2",
     windows: "Windows"
 }
 
@@ -56,5 +65,50 @@ export const links: Record<Platform, Links | undefined> = {
             }
         ]
     },
+    macOS_v2: {
+        location: (version, suffix) => `${macDmgLocation}${suffix}v${version}.dmg`,
+        actions: [
+            {
+                name: "default",
+                action: "download",
+                target: "",
+                suffix: "",
+            },
+            {
+                name: "cloud sync w/ iCloud",
+                action: "download",
+                target: "",
+                suffix: "with%20CloudSync%20"
+            }
+        ]
+    },
     windows: undefined,
+};
+
+export interface NextStep {
+    readonly label: string;
+    readonly page: string;
+}
+
+export interface Screenshot {
+    readonly name: string;
+    readonly width?: string;
+}
+
+export interface Bullet {
+    readonly text: string;
+    readonly image?: Screenshot;
+    readonly screenshot?: Screenshot;
+    readonly link?: string;
+}
+
+export interface PageStep {
+    readonly screenshot: Screenshot;
+    readonly title: string;
+    readonly bullets: Bullet[];
+    readonly previousStep?: string;
+    readonly nextSteps: NextStep[];
+}
+
+export const tutorialPages: Record<string, PageStep> = {
 };
