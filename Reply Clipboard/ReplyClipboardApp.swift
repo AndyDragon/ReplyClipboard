@@ -11,10 +11,9 @@ import SwiftData
 @main
 struct ReplyClipboardApp: App {
     @State var checkingForUpdates = false
-    @State var isShowingVersionAvailableToast: Bool = false
-    @State var isShowingVersionRequiredToast: Bool = false
+    @State var versionCheckResult: VersionCheckResult = .complete
     @State var versionCheckToast = VersionCheckToast()
-
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -34,8 +33,7 @@ struct ReplyClipboardApp: App {
     var body: some Scene {
         let appState = VersionCheckAppState(
             isCheckingForUpdates: $checkingForUpdates,
-            isShowingVersionAvailableToast: $isShowingVersionAvailableToast,
-            isShowingVersionRequiredToast: $isShowingVersionRequiredToast,
+            versionCheckResult: $versionCheckResult,
             versionCheckToast: $versionCheckToast,
             versionLocation: "https://vero.andydragon.com/static/data/replyclipboard/version.json")
         WindowGroup {
@@ -45,7 +43,7 @@ struct ReplyClipboardApp: App {
         .commands {
             CommandGroup(replacing: .appSettings, addition: {
                 Button(action: {
-                    appState.checkForUpdates()
+                    appState.checkForUpdates(true)
                 }, label: {
                     Text("Check for updates...")
                 })

@@ -14,11 +14,15 @@
 		492DC2032B79A1E4004BC668 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 492DC2022B79A1E4004BC668 /* Assets.xcassets */; };
 		492DC2062B79A1E4004BC668 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 492DC2052B79A1E4004BC668 /* Preview Assets.xcassets */; };
 		492DC20E2B79B59A004BC668 /* ItemEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492DC20D2B79B59A004BC668 /* ItemEditor.swift */; };
-		4950CE382B7CF4FF00C401B3 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 4950CE372B7CF4FF00C401B3 /* AlertToast */; };
-		4965D1D82B82829500DBCA73 /* ToastDismissShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4965D1D72B82829500DBCA73 /* ToastDismissShield.swift */; };
 		4965D1DA2B8285BA00DBCA73 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4965D1D92B8285BA00DBCA73 /* Types.swift */; };
 		4965D1DC2B82861700DBCA73 /* VersionCheckAppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4965D1DB2B82861700DBCA73 /* VersionCheckAppState.swift */; };
 		499038F02B81120F007A9449 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499038EF2B81120F007A9449 /* Helpers.swift */; };
+		49FE12442D3311610018C3DE /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE123C2D3311610018C3DE /* View+Extensions.swift */; };
+		49FE12452D3311610018C3DE /* AdvancedToastModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE123F2D3311610018C3DE /* AdvancedToastModifiers.swift */; };
+		49FE12462D3311610018C3DE /* ContentView+ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE12432D3311610018C3DE /* ContentView+ViewModel.swift */; };
+		49FE12472D3311610018C3DE /* AdvancedToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE12412D3311610018C3DE /* AdvancedToastView.swift */; };
+		49FE12482D3311610018C3DE /* AdvancedToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE123E2D3311610018C3DE /* AdvancedToast.swift */; };
+		49FE12492D3311610018C3DE /* AdvancedToastStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE12402D3311610018C3DE /* AdvancedToastStyle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,11 +35,16 @@
 		492DC2072B79A1E4004BC668 /* ReplyClipboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ReplyClipboard.entitlements; sourceTree = "<group>"; };
 		492DC20D2B79B59A004BC668 /* ItemEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditor.swift; sourceTree = "<group>"; };
 		494E835E2B7A8AC60028BE37 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
-		4965D1D72B82829500DBCA73 /* ToastDismissShield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastDismissShield.swift; sourceTree = "<group>"; };
 		4965D1D92B8285BA00DBCA73 /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		4965D1DB2B82861700DBCA73 /* VersionCheckAppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCheckAppState.swift; sourceTree = "<group>"; };
 		499038EF2B81120F007A9449 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		49FAC3882B7D5C4E0054D2D3 /* CloudSync.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = CloudSync.xcconfig; sourceTree = "<group>"; };
+		49FE123C2D3311610018C3DE /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
+		49FE123E2D3311610018C3DE /* AdvancedToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedToast.swift; sourceTree = "<group>"; };
+		49FE123F2D3311610018C3DE /* AdvancedToastModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedToastModifiers.swift; sourceTree = "<group>"; };
+		49FE12402D3311610018C3DE /* AdvancedToastStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedToastStyle.swift; sourceTree = "<group>"; };
+		49FE12412D3311610018C3DE /* AdvancedToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedToastView.swift; sourceTree = "<group>"; };
+		49FE12432D3311610018C3DE /* ContentView+ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView+ViewModel.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,7 +53,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4918AC1F2B7C23200078BC00 /* CloudKitSyncMonitor in Frameworks */,
-				4950CE382B7CF4FF00C401B3 /* AlertToast in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,13 +78,14 @@
 		492DC1FB2B79A1E3004BC668 /* Reply Clipboard */ = {
 			isa = PBXGroup;
 			children = (
+				49FE12422D3311610018C3DE /* Advanced Toast */,
 				492DC1FC2B79A1E3004BC668 /* ReplyClipboardApp.swift */,
 				492DC1FE2B79A1E3004BC668 /* ContentView.swift */,
+				49FE12432D3311610018C3DE /* ContentView+ViewModel.swift */,
 				492DC2002B79A1E3004BC668 /* Item.swift */,
 				492DC20D2B79B59A004BC668 /* ItemEditor.swift */,
 				499038EF2B81120F007A9449 /* Helpers.swift */,
 				4965D1D92B8285BA00DBCA73 /* Types.swift */,
-				4965D1D72B82829500DBCA73 /* ToastDismissShield.swift */,
 				4965D1DB2B82861700DBCA73 /* VersionCheckAppState.swift */,
 				492DC2022B79A1E4004BC668 /* Assets.xcassets */,
 				494E835E2B7A8AC60028BE37 /* Info.plist */,
@@ -93,6 +102,26 @@
 				492DC2052B79A1E4004BC668 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		49FE123D2D3311610018C3DE /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				49FE123C2D3311610018C3DE /* View+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		49FE12422D3311610018C3DE /* Advanced Toast */ = {
+			isa = PBXGroup;
+			children = (
+				49FE123D2D3311610018C3DE /* Extensions */,
+				49FE123E2D3311610018C3DE /* AdvancedToast.swift */,
+				49FE123F2D3311610018C3DE /* AdvancedToastModifiers.swift */,
+				49FE12402D3311610018C3DE /* AdvancedToastStyle.swift */,
+				49FE12412D3311610018C3DE /* AdvancedToastView.swift */,
+			);
+			path = "Advanced Toast";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -113,7 +142,6 @@
 			name = "Reply Clipboard";
 			packageProductDependencies = (
 				4918AC1E2B7C23200078BC00 /* CloudKitSyncMonitor */,
-				4950CE372B7CF4FF00C401B3 /* AlertToast */,
 			);
 			productName = "Reply Clipboard";
 			productReference = 492DC1F92B79A1E3004BC668 /* Reply Clipboard.app */;
@@ -145,7 +173,6 @@
 			mainGroup = 492DC1F02B79A1E3004BC668;
 			packageReferences = (
 				4918AC1D2B7C23200078BC00 /* XCRemoteSwiftPackageReference "CloudKitSyncMonitor" */,
-				4950CE362B7CF4FF00C401B3 /* XCRemoteSwiftPackageReference "AlertToast" */,
 			);
 			productRefGroup = 492DC1FA2B79A1E3004BC668 /* Products */;
 			projectDirPath = "";
@@ -173,8 +200,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				49FE12442D3311610018C3DE /* View+Extensions.swift in Sources */,
+				49FE12452D3311610018C3DE /* AdvancedToastModifiers.swift in Sources */,
+				49FE12462D3311610018C3DE /* ContentView+ViewModel.swift in Sources */,
+				49FE12472D3311610018C3DE /* AdvancedToastView.swift in Sources */,
+				49FE12482D3311610018C3DE /* AdvancedToast.swift in Sources */,
+				49FE12492D3311610018C3DE /* AdvancedToastStyle.swift in Sources */,
 				492DC1FF2B79A1E3004BC668 /* ContentView.swift in Sources */,
-				4965D1D82B82829500DBCA73 /* ToastDismissShield.swift in Sources */,
 				492DC20E2B79B59A004BC668 /* ItemEditor.swift in Sources */,
 				4965D1DC2B82861700DBCA73 /* VersionCheckAppState.swift in Sources */,
 				4965D1DA2B8285BA00DBCA73 /* Types.swift in Sources */,
@@ -317,7 +349,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Reply Clipboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 7U6K972H9Q;
@@ -351,7 +383,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Reply Clipboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 7U6K972H9Q;
@@ -443,7 +475,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Reply Clipboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 7U6K972H9Q;
@@ -501,14 +533,6 @@
 				minimumVersion = 1.2.1;
 			};
 		};
-		4950CE362B7CF4FF00C401B3 /* XCRemoteSwiftPackageReference "AlertToast" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/elai950/AlertToast.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -516,11 +540,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4918AC1D2B7C23200078BC00 /* XCRemoteSwiftPackageReference "CloudKitSyncMonitor" */;
 			productName = CloudKitSyncMonitor;
-		};
-		4950CE372B7CF4FF00C401B3 /* AlertToast */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4950CE362B7CF4FF00C401B3 /* XCRemoteSwiftPackageReference "AlertToast" */;
-			productName = AlertToast;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

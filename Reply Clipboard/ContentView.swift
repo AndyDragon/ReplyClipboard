@@ -7,31 +7,25 @@
 
 import SwiftUI
 import SwiftData
-import AlertToast
 import CloudKitSyncMonitor
 
 struct ContentView: View {
     @Environment(\.openURL) var openURL
     @Environment(\.modelContext) private var modelContext
     @Query private var items: [Item]
+
+    @State private var viewModel = ViewModel()
+
     @State private var selectedItem: Item?
     @State private var exceptionError = ""
     @State private var backupOperation = BackupOperation.none
     @State private var showingBackupRestoreErrorAlert = false
     @State private var showSyncAccountStatus = false
-    @State private var toastType: AlertToast.AlertType = .regular
-    @State private var toastText = ""
-    @State private var toastSubTitle = ""
-    @State private var toastDuration = 3.0
-    @State private var isShowingToast = false
     @State private var deleteAlertText = ""
     @State private var deleteAlertAction: (() -> Void)? = nil
     @State private var showDeleteAlert = false
     @ObservedObject private var syncMonitor = SyncMonitor.shared
     var appState: VersionCheckAppState
-    private var isAnyToastShowing: Bool {
-        isShowingToast || appState.isShowingVersionAvailableToast.wrappedValue || appState.isShowingVersionRequiredToast.wrappedValue
-    }
 
     init(_ appState: VersionCheckAppState) {
         self.appState = appState
@@ -48,7 +42,7 @@ struct ContentView: View {
                                 Spacer()
                                 Button(action: {
                                     copyToClipboard(item.text)
-                                    showToast("Copied!", "Copied \(item.name) to the clipboard", duration: 1)
+                                    viewModel.showSuccessToast("Copied!", "Copied \(item.name) to the clipboard")
                                 }) {
                                     HStack {
                                         Image(systemName: "clipboard")
@@ -72,7 +66,7 @@ struct ContentView: View {
                             deleteAlertAction = {
                                 selectedItem = nil
                                 modelContext.delete(item)
-                                showToast("Deleted item!", "Removed the item")
+                                viewModel.showSuccessToast("Deleted item!", "Removed the item")
                             }
                             showDeleteAlert.toggle()
                         }
@@ -82,7 +76,7 @@ struct ContentView: View {
                         Button(action: addItem) {
                             Label("Add Item", systemImage: "plus")
                         }
-                        .disabled(isAnyToastShowing)
+                        .disabled(viewModel.hasModalToasts)
                     }
                     .background(Color.gray.opacity(0.000001))
                     .onTapGesture {
@@ -113,12 +107,7 @@ struct ContentView: View {
                         }
                     }
                 }
-                ToastDismissShield(
-                    isAnyToastShowing: isAnyToastShowing,
-                    isShowingToast: $isShowingToast,
-                    isShowingVersionAvailableToast: appState.isShowingVersionAvailableToast)
             }
-            .blur(radius: isAnyToastShowing ? 4 : 0)
         } detail: {
             ZStack {
                 VStack {
@@ -128,7 +117,7 @@ struct ContentView: View {
                             deleteAlertAction = {
                                 selectedItem = nil
                                 modelContext.delete(item)
-                                showToast("Deleted item!", "Removed the item")
+                                viewModel.showSuccessToast("Deleted item!", "Removed the item")
                             }
                             showDeleteAlert.toggle()
                         }
@@ -143,18 +132,13 @@ struct ContentView: View {
                     }
                     Spacer()
                 }
-                ToastDismissShield(
-                    isAnyToastShowing: isAnyToastShowing,
-                    isShowingToast: $isShowingToast,
-                    isShowingVersionAvailableToast: appState.isShowingVersionAvailableToast)
             }
-            .blur(radius: isAnyToastShowing ? 4 : 0)
             .toolbar {
                 Menu("JSON", systemImage: "tray") {
                     Button("Backup to Clipboard", systemImage: "tray.and.arrow.down", action: backup)
                     Button("Restore from Clipboard", systemImage: "tray.and.arrow.up", action: restore)
                 }
-                .disabled(isAnyToastShowing)
+                .disabled(viewModel.hasModalToasts)
             }
         }
         .alert(
@@ -186,89 +170,15 @@ struct ContentView: View {
                 .accentColor(.red)
             }
         )
-        .toast(
-            isPresenting: $isShowingToast,
-            duration: toastDuration,
-            tapToDismiss: true,
-            offsetY: 32,
-            alert: {
-                AlertToast(
-                    displayMode: .hud,
-                    type: toastType,
-                    title: toastText,
-                    subTitle: toastSubTitle)
-            })
-        .toast(
-            isPresenting: appState.isShowingVersionAvailableToast,
-            duration: 10,
-            tapToDismiss: true,
-            offsetY: 32,
-            alert: {
-                AlertToast(
-                    displayMode: .hud,
-                    type: .systemImage("exclamationmark.triangle.fill", .yellow),
-                    title: "New version available",
-                    subTitle: getVersionSubTitle())
-            },
-            onTap: {
-                if let url = URL(string: appState.versionCheckToast.wrappedValue.linkToCurrentVersion) {
-                    openURL(url)
-                }
-            },
-            completion: {
-                appState.resetCheckingForUpdates()
-            })
-        .toast(
-            isPresenting: appState.isShowingVersionRequiredToast,
-            duration: 0,
-            tapToDismiss: true,
-            offsetY: 32,
-            alert: {
-                AlertToast(
-                    displayMode: .hud,
-                    type: .systemImage("xmark.octagon.fill", .red),
-                    title: "New version required",
-                    subTitle: getVersionSubTitle())
-            },
-            onTap: {
-                if let url = URL(string: appState.versionCheckToast.wrappedValue.linkToCurrentVersion) {
-                    openURL(url)
-                    NSApplication.shared.terminate(nil)
-                }
-            },
-            completion: {
-                appState.resetCheckingForUpdates()
-            })
+        .advancedToastView(toasts: $viewModel.toastViews)
+        .attachVersionCheckState(viewModel, appState) { url in
+            openURL(url)
+        }
         .task {
             appState.checkForUpdates()
         }
     }
     
-    func getVersionSubTitle() -> String {
-        if appState.isShowingVersionAvailableToast.wrappedValue {
-            return "You are using v\(appState.versionCheckToast.wrappedValue.appVersion) " +
-            "and v\(appState.versionCheckToast.wrappedValue.currentVersion) is available" +
-            "\(appState.versionCheckToast.wrappedValue.linkToCurrentVersion.isEmpty ? "" : ", click here to open your browser") " +
-            "(this will go away in 10 seconds)"
-        } else if appState.isShowingVersionRequiredToast.wrappedValue {
-            return "You are using v\(appState.versionCheckToast.wrappedValue.appVersion) " +
-            "and v\(appState.versionCheckToast.wrappedValue.currentVersion) is required" +
-            "\(appState.versionCheckToast.wrappedValue.linkToCurrentVersion.isEmpty ? "" : ", click here to open your browser") " +
-            "or ⌘ + Q to Quit"
-        }
-        return ""
-    }
-    
-    func showToast(_ text: String, _ subTitle: String, duration: Double = 2) {
-        withAnimation {
-            toastType = .complete(.blue)
-            toastText = text
-            toastSubTitle = subTitle
-            toastDuration = duration
-            isShowingToast.toggle()
-        }
-    }
-
     private func addItem() {
         withAnimation {
             let newItem = Item(name: "new item", text: "")
@@ -325,7 +235,7 @@ struct ContentView: View {
             }))
             let json = try encoder.encode(codableItems)
             copyToClipboardRaw(String(decoding: json, as: UTF8.self))
-            showToast("Backed up!", "Copied a backup of the items to the clipboard")
+            viewModel.showSuccessToast("Backed up!", "Copied a backup of the items to the clipboard")
         } catch {
             exceptionError = error.localizedDescription
             backupOperation = .backup
@@ -350,7 +260,7 @@ struct ContentView: View {
                 for codableItem in codableItems.sorted(by: { $0.name < $1.name }) {
                     modelContext.insert(codableItem.toItem())
                 }
-                showToast("Restored!", "Restored the items from the clipboard", duration: 6.0)
+                viewModel.showSuccessToast("Restored!", "Restored the items from the clipboard")
             }
         } catch let DecodingError.dataCorrupted(context) {
             exceptionError = context.debugDescription

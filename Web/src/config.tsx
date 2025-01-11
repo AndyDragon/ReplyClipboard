@@ -19,21 +19,16 @@ export const showMacInfo = true;
 export const macDmgLocation = "replyclipboard/macos/Reply%20Clipboard%20";
 export const macReleaseNotesLocation = "releaseNotes-mac.json";
 
-export const showMacV2Info = false;
-export const macV2DmgLocation = "replyclipboard/macos/Reply%20Clipboard%20";
-export const macV2ReleaseNotesLocation = "releaseNotes-mac_v2.json";
-
 export const showWindowsInfo = false;
 export const windowsInstallerLocation = "replyclipboard/windows";
 export const windowsReleaseNotesLocation = "releaseNotes-windows.json";
 
 export const hasTutorial = false;
 
-export type Platform = "macOS" | "macOS_v2" | "windows";
+export type Platform = "macOS" | "windows";
 
 export const platformString: Record<Platform, string> = {
     macOS: "macOS",
-    macOS_v2: "macOS v2",
     windows: "Windows"
 }
 
@@ -61,24 +56,7 @@ export const links: Record<Platform, Links | undefined> = {
                 name: "cloud sync w/ iCloud",
                 action: "download",
                 target: "",
-                suffix: "with%20CloudSync%20"
-            }
-        ]
-    },
-    macOS_v2: {
-        location: (version, suffix) => `${macDmgLocation}${suffix}v${version}.dmg`,
-        actions: [
-            {
-                name: "default",
-                action: "download",
-                target: "",
-                suffix: "",
-            },
-            {
-                name: "cloud sync w/ iCloud",
-                action: "download",
-                target: "",
-                suffix: "with%20CloudSync%20"
+                suffix: "with%20iCloud%20"
             }
         ]
     },

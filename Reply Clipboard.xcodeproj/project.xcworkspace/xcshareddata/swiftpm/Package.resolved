@@ -1,14 +1,6 @@
 {
+  "originHash" : "7a42b114802059f337913c41f1a323e66ad013257b0c7c8e4c81ebc80a7182ad",
   "pins" : [
-    {
-      "identity" : "alerttoast",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/elai950/AlertToast.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "638f38f9daf08e17b7caea22d2fcb9c0a418d1b6"
-      }
-    },
     {
       "identity" : "cloudkitsyncmonitor",
       "kind" : "remoteSourceControl",
@@ -19,5 +11,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
