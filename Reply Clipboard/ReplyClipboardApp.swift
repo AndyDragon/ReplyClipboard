@@ -10,6 +10,8 @@ import SwiftData
 
 @main
 struct ReplyClipboardApp: App {
+    @Environment(\.openWindow) private var openWindow
+
     @State var checkingForUpdates = false
     @State var versionCheckResult: VersionCheckResult = .complete
     @State var versionCheckToast = VersionCheckToast()
@@ -41,6 +43,14 @@ struct ReplyClipboardApp: App {
         }
         .modelContainer(sharedModelContainer)
         .commands {
+            CommandGroup(replacing: CommandGroupPlacement.appInfo) {
+                Button(action: {
+                    // Open the "about" window using the id "about"
+                    openWindow(id: "about")
+                }, label: {
+                    Text("About \(Bundle.main.displayName ?? "Feature Tracker")")
+                })
+            }
             CommandGroup(replacing: .appSettings, addition: {
                 Button(action: {
                     appState.checkForUpdates(true)
@@ -50,5 +60,12 @@ struct ReplyClipboardApp: App {
                 .disabled(checkingForUpdates)
             })
         }
+
+        // About view window with id "about"
+        Window("About \(Bundle.main.displayName ?? "Feature Tracker")", id: "about") {
+            AboutView()
+        }
+        .defaultPosition(.center)
+        .windowResizability(.contentSize)
     }
 }
