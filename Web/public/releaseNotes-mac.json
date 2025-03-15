@@ -41,11 +41,17 @@
                     "Internal release",
                     "Added themes to the application"
                 ]
-            },
+            }
+        ]
+    },
+    {
+        "version": "1.0.9",
+        "notes": [
             {
-                "date": "Feb 21, 2024",
+                "date": "Mar 15, 2025",
                 "notes": [
-                    "test entry"
+                    "Release for Apple app store",
+                    "Converted to a menu bar utility app"
                 ]
             }
         ]

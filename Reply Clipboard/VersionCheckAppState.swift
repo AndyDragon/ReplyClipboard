@@ -5,6 +5,8 @@
 //  Created by Andrew Forget on 2024-02-18.
 //
 
+#if STANDALONE
+
 import SwiftUI
 
 struct VersionManifest: Codable {
@@ -112,3 +114,5 @@ struct VersionCheckAppState {
         }
     }
 }
+
+#endif

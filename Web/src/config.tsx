@@ -8,34 +8,56 @@ export const applicationDetails = (
         text so when you click Copy, it places any text clipboard contents in the snippet.
     </>
 );
+export const showMacScreenshot = true;
 export const macScreenshotWidth = 720;
 export const macScreenshotHeight = 340;
+export const showWindowsScreenshot = false;
+export const windowsScreenshotWidth = 1200;
+export const windowsScreenshotHeight = 800;
 
 export const deploymentWebLocation = "/app/replyclipboard";
 
 export const versionLocation = "replyclipboard/version.json";
 
-export const showMacInfo = true;
+export const enum PlatformLocation {
+    DoNotShow,
+    AppPortal,
+    AppStore,
+}
+
+export const showMacInfo: PlatformLocation = PlatformLocation.AppPortal;
 export const macDmgLocation = "replyclipboard/macos/Reply%20Clipboard%20";
 export const macReleaseNotesLocation = "releaseNotes-mac.json";
 
-export const showWindowsInfo = false;
-export const windowsInstallerLocation = "replyclipboard/windows";
+export const showIosInfo: PlatformLocation = PlatformLocation.DoNotShow;
+export const iosAppStoreLocation = "https://apps.apple.com/us/app/vero-scripts/id6741414908";
+export const iosReleaseNotesLocation = "releaseNotes-ios.json";
+
+export const showWindowsInfo: PlatformLocation = PlatformLocation.DoNotShow;
+export const windowsAppStoreLocation = "https://apps.microsoft.com/store/detail/9PCZV992L5LG";
 export const windowsReleaseNotesLocation = "releaseNotes-windows.json";
+
+export const showAndroidInfo: PlatformLocation = PlatformLocation.DoNotShow;
+export const androidInstallerLocation = "https://play.google.com/store/apps/details?id=com.andydragon.vero_scripts";
+export const androidReleaseNotesLocation = "releaseNotes-android.json";
+
+export const supportEmail = "andydragon@live.com";
 
 export const hasTutorial = false;
 
-export type Platform = "macOS" | "windows";
+export type Platform = "macOS" | "windows" | "iOS" | "android";
 
 export const platformString: Record<Platform, string> = {
     macOS: "macOS",
-    windows: "Windows"
+    windows: "Windows",
+    iOS: "iPhone / iPad",
+    android: "Android",
 }
 
 export interface Links {
+    readonly useAppStore?: true;
     readonly location: (version: string, flavorSuffix: string) => string;
     readonly actions: {
-        readonly name: string;
         readonly action: string;
         readonly target: string;
         readonly suffix: string;
@@ -47,20 +69,45 @@ export const links: Record<Platform, Links | undefined> = {
         location: (version, suffix) => `${macDmgLocation}${suffix}v${version}.dmg`,
         actions: [
             {
-                name: "default",
-                action: "download",
-                target: "",
+                action: "install",
+                target: "_blank",
                 suffix: "",
-            },
-            {
-                name: "cloud sync w/ iCloud",
-                action: "download",
-                target: "",
-                suffix: "with%20iCloud%20"
             }
         ]
     },
-    windows: undefined,
+    iOS: {
+        useAppStore: true,
+        location: (_version, _suffix) => iosAppStoreLocation,
+        actions: [
+            {
+                action: "install from Apple app store",
+                target: "_blank",
+                suffix: "",
+            }
+        ]
+    },
+    windows: {
+        useAppStore: true,
+        location: (_version, _suffix) => windowsAppStoreLocation,
+        actions: [
+            {
+                action: "install from Microsoft store",
+                target: "_blank",
+                suffix: "",
+            }
+        ]
+    },
+    android: {
+        useAppStore: true,
+        location: (_version, _suffix) => androidInstallerLocation,
+        actions: [
+            {
+                action: "install from Google Play store",
+                target: "_blank",
+                suffix: "",
+            }
+        ]
+    },
 };
 
 export interface NextStep {

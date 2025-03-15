@@ -1,5 +1,5 @@
 //
-//  CloudSync.xcconfig
+//  NonCloudSync.xcconfig
 //  Reply Clipboard
 //
 //  Created by Andrew Forget on 2024-02-14.
@@ -8,4 +8,4 @@
 // Configuration settings file format documentation can be found at:
 // https://help.apple.com/xcode/#/dev745c5c974
 
-OTHER_SWIFT_FLAGS = -DCLOUDSYNC
+OTHER_SWIFT_FLAGS = -DNONCLOUDSYNC

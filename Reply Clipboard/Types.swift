@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct CloudKitConfiguration {
-#if CLOUDSYNC
-    static var Enabled = true
-#else
+#if NONCLOUDSYNC
     static var Enabled = false
+#else
+    static var Enabled = true
 #endif
 }
 

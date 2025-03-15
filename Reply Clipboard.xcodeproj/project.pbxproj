@@ -18,6 +18,7 @@
 		4965D1DA2B8285BA00DBCA73 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4965D1D92B8285BA00DBCA73 /* Types.swift */; };
 		4965D1DC2B82861700DBCA73 /* VersionCheckAppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4965D1DB2B82861700DBCA73 /* VersionCheckAppState.swift */; };
 		499038F02B81120F007A9449 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 499038EF2B81120F007A9449 /* Helpers.swift */; };
+		49D3E9172D8630D300847D2B /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D3E9162D8630D300847D2B /* MenuView.swift */; };
 		49FE12442D3311610018C3DE /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE123C2D3311610018C3DE /* View+Extensions.swift */; };
 		49FE12452D3311610018C3DE /* AdvancedToastModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE123F2D3311610018C3DE /* AdvancedToastModifiers.swift */; };
 		49FE12462D3311610018C3DE /* ContentView+ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49FE12432D3311610018C3DE /* ContentView+ViewModel.swift */; };
@@ -40,7 +41,8 @@
 		4965D1D92B8285BA00DBCA73 /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
 		4965D1DB2B82861700DBCA73 /* VersionCheckAppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCheckAppState.swift; sourceTree = "<group>"; };
 		499038EF2B81120F007A9449 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
-		49FAC3882B7D5C4E0054D2D3 /* CloudSync.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = CloudSync.xcconfig; sourceTree = "<group>"; };
+		49D3E9162D8630D300847D2B /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
+		49FAC3882B7D5C4E0054D2D3 /* NonCloudSync.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = NonCloudSync.xcconfig; sourceTree = "<group>"; };
 		49FE123C2D3311610018C3DE /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		49FE123E2D3311610018C3DE /* AdvancedToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedToast.swift; sourceTree = "<group>"; };
 		49FE123F2D3311610018C3DE /* AdvancedToastModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedToastModifiers.swift; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 				49FE12422D3311610018C3DE /* Advanced Toast */,
 				4935238A2D33B011000EA950 /* AboutView.swift */,
 				492DC1FC2B79A1E3004BC668 /* ReplyClipboardApp.swift */,
+				49D3E9162D8630D300847D2B /* MenuView.swift */,
 				492DC1FE2B79A1E3004BC668 /* ContentView.swift */,
 				49FE12432D3311610018C3DE /* ContentView+ViewModel.swift */,
 				492DC2002B79A1E3004BC668 /* Item.swift */,
@@ -93,7 +96,7 @@
 				492DC2022B79A1E4004BC668 /* Assets.xcassets */,
 				494E835E2B7A8AC60028BE37 /* Info.plist */,
 				492DC2072B79A1E4004BC668 /* ReplyClipboard.entitlements */,
-				49FAC3882B7D5C4E0054D2D3 /* CloudSync.xcconfig */,
+				49FAC3882B7D5C4E0054D2D3 /* NonCloudSync.xcconfig */,
 				492DC2042B79A1E4004BC668 /* Preview Content */,
 			);
 			path = "Reply Clipboard";
@@ -213,6 +216,7 @@
 				492DC20E2B79B59A004BC668 /* ItemEditor.swift in Sources */,
 				4935238B2D33B011000EA950 /* AboutView.swift in Sources */,
 				4965D1DC2B82861700DBCA73 /* VersionCheckAppState.swift in Sources */,
+				49D3E9172D8630D300847D2B /* MenuView.swift in Sources */,
 				4965D1DA2B8285BA00DBCA73 /* Types.swift in Sources */,
 				492DC2012B79A1E3004BC668 /* Item.swift in Sources */,
 				499038F02B81120F007A9449 /* Helpers.swift in Sources */,
@@ -353,7 +357,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Reply Clipboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 7U6K972H9Q;
@@ -387,7 +391,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Reply Clipboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 7U6K972H9Q;
@@ -411,9 +415,9 @@
 			};
 			name = Release;
 		};
-		49FAC3892B7D5C780054D2D3 /* CloudSync */ = {
+		49FAC3892B7D5C780054D2D3 /* NonCloudSync */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 49FAC3882B7D5C4E0054D2D3 /* CloudSync.xcconfig */;
+			baseConfigurationReference = 49FAC3882B7D5C4E0054D2D3 /* NonCloudSync.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -466,11 +470,11 @@
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
-			name = CloudSync;
+			name = NonCloudSync;
 		};
-		49FAC38A2B7D5C780054D2D3 /* CloudSync */ = {
+		49FAC38A2B7D5C780054D2D3 /* NonCloudSync */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 49FAC3882B7D5C4E0054D2D3 /* CloudSync.xcconfig */;
+			baseConfigurationReference = 49FAC3882B7D5C4E0054D2D3 /* NonCloudSync.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -479,7 +483,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 9;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Reply Clipboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 7U6K972H9Q;
@@ -487,7 +491,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Reply Clipboard with iCloud";
+				INFOPLIST_KEY_CFBundleDisplayName = "Reply Clipboard";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -501,7 +505,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
-			name = CloudSync;
+			name = NonCloudSync;
 		};
 /* End XCBuildConfiguration section */
 
@@ -511,7 +515,7 @@
 			buildConfigurations = (
 				492DC2082B79A1E4004BC668 /* Debug */,
 				492DC2092B79A1E4004BC668 /* Release */,
-				49FAC3892B7D5C780054D2D3 /* CloudSync */,
+				49FAC3892B7D5C780054D2D3 /* NonCloudSync */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -521,7 +525,7 @@
 			buildConfigurations = (
 				492DC20B2B79A1E4004BC668 /* Debug */,
 				492DC20C2B79A1E4004BC668 /* Release */,
-				49FAC38A2B7D5C780054D2D3 /* CloudSync */,
+				49FAC38A2B7D5C780054D2D3 /* NonCloudSync */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

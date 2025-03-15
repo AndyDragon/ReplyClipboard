@@ -11,11 +11,14 @@ import SwiftData
 @main
 struct ReplyClipboardApp: App {
     @Environment(\.openWindow) private var openWindow
+    @Environment(\.dismissWindow) private var dismissWindow
 
+#if STANDALONE
     @State var checkingForUpdates = false
     @State var versionCheckResult: VersionCheckResult = .complete
     @State var versionCheckToast = VersionCheckToast()
-    
+#endif
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -33,33 +36,53 @@ struct ReplyClipboardApp: App {
     }()
 
     var body: some Scene {
+#if STANDALONE
         let appState = VersionCheckAppState(
             isCheckingForUpdates: $checkingForUpdates,
             versionCheckResult: $versionCheckResult,
             versionCheckToast: $versionCheckToast,
             versionLocation: "https://vero.andydragon.com/static/data/replyclipboard/version.json")
-        WindowGroup {
-            ContentView(appState)
+#endif
+
+        // Menu bar menu
+        MenuBarExtra {
+            MenuView(
+                openWindow: {
+                    dismissWindow(id: "main")
+                    NSApplication.shared.activate(ignoringOtherApps: true)
+                    openWindow(id: "main")
+                },
+                openAbout: {
+                    dismissWindow(id: "about")
+                    NSApplication.shared.activate(ignoringOtherApps: true)
+                    openWindow(id: "about")
+                }
+            )
+            .modelContainer(sharedModelContainer)
+        } label: {
+            Label("Reply Clipboard", systemImage: "list.bullet.clipboard.fill")
+        }
+
+        // Main view window with id "main"
+        Window("Reply Clipboard", id: "main") {
+#if STANDALONE
+            ContentView(appState) {
+                NSApplication.shared.activate(ignoringOtherApps: true)
+                openWindow(id: "about")
+            }
+#else
+            ContentView() {
+                dismissWindow(id: "about")
+                NSApplication.shared.activate(ignoringOtherApps: true)
+                openWindow(id: "about")
+            }
+#if SCREENSHOT
+            .frame(width: 1280, height: 748)
+            .frame(minWidth: 1280, maxWidth: 1280, minHeight: 748, maxHeight: 748)
+#endif
+#endif
         }
         .modelContainer(sharedModelContainer)
-        .commands {
-            CommandGroup(replacing: CommandGroupPlacement.appInfo) {
-                Button(action: {
-                    // Open the "about" window using the id "about"
-                    openWindow(id: "about")
-                }, label: {
-                    Text("About \(Bundle.main.displayName ?? "Feature Tracker")")
-                })
-            }
-            CommandGroup(replacing: .appSettings, addition: {
-                Button(action: {
-                    appState.checkForUpdates(true)
-                }, label: {
-                    Text("Check for updates...")
-                })
-                .disabled(checkingForUpdates)
-            })
-        }
 
         // About view window with id "about"
         Window("About \(Bundle.main.displayName ?? "Feature Tracker")", id: "about") {

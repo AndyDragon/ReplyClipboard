@@ -25,11 +25,26 @@ struct ContentView: View {
     @State private var deleteAlertAction: (() -> Void)? = nil
     @State private var showDeleteAlert = false
     @ObservedObject private var syncMonitor = SyncMonitor.shared
+#if STANDALONE
     var appState: VersionCheckAppState
+#endif
+    var openAbout: () -> Void
 
-    init(_ appState: VersionCheckAppState) {
+#if STANDALONE
+    init(
+        _ appState: VersionCheckAppState,
+        _ openAbout: @escaping () -> Void
+    ) {
         self.appState = appState
+        self.openAbout = openAbout
     }
+#else
+    init(
+        _ openAbout: @escaping () -> Void
+    ) {
+        self.openAbout = openAbout
+    }
+#endif
 
     var body: some View {
         NavigationSplitView {
@@ -71,7 +86,6 @@ struct ContentView: View {
                             showDeleteAlert.toggle()
                         }
                     }
-                    .navigationSplitViewColumnWidth(min: 280, ideal: 320)
                     .toolbar {
                         Button(action: addItem) {
                             Label("Add Item", systemImage: "plus")
@@ -108,6 +122,7 @@ struct ContentView: View {
                     }
                 }
             }
+            .navigationSplitViewColumnWidth(min: 280, ideal: 320)
         } detail: {
             ZStack {
                 VStack {
@@ -139,6 +154,11 @@ struct ContentView: View {
                     Button("Restore from Clipboard", systemImage: "tray.and.arrow.up", action: restore)
                 }
                 .disabled(viewModel.hasModalToasts)
+                Button(action: {
+                    openAbout()
+                }) {
+                    Label("About", systemImage: "info.circle")
+                }
             }
         }
         .alert(
@@ -171,12 +191,14 @@ struct ContentView: View {
             }
         )
         .advancedToastView(toasts: $viewModel.toastViews)
+#if STANDALONE
         .attachVersionCheckState(viewModel, appState) { url in
             openURL(url)
         }
         .task {
             appState.checkForUpdates()
         }
+#endif
     }
     
     private func addItem() {
