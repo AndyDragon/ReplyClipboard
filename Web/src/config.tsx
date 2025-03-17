@@ -25,8 +25,8 @@ export const enum PlatformLocation {
     AppStore,
 }
 
-export const showMacInfo: PlatformLocation = PlatformLocation.AppPortal;
-export const macDmgLocation = "replyclipboard/macos/Reply%20Clipboard%20";
+export const showMacInfo: PlatformLocation = PlatformLocation.AppStore;
+export const macAppStoreLocation = "https://apps.apple.com/us/app/reply-clipboard/id6477769611";
 export const macReleaseNotesLocation = "releaseNotes-mac.json";
 
 export const showIosInfo: PlatformLocation = PlatformLocation.DoNotShow;
@@ -66,10 +66,11 @@ export interface Links {
 
 export const links: Record<Platform, Links | undefined> = {
     macOS: {
-        location: (version, suffix) => `${macDmgLocation}${suffix}v${version}.dmg`,
+        useAppStore: true,
+        location: (_version, _suffix) => macAppStoreLocation,
         actions: [
             {
-                action: "install",
+                action: "install from Apple app store",
                 target: "_blank",
                 suffix: "",
             }
