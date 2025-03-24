@@ -14,6 +14,7 @@
 		492DC2032B79A1E4004BC668 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 492DC2022B79A1E4004BC668 /* Assets.xcassets */; };
 		492DC2062B79A1E4004BC668 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 492DC2052B79A1E4004BC668 /* Preview Assets.xcassets */; };
 		492DC20E2B79B59A004BC668 /* ItemEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492DC20D2B79B59A004BC668 /* ItemEditor.swift */; };
+		493343B72D92218900071278 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 493343B62D92218900071278 /* LaunchAtLogin */; };
 		4935238B2D33B011000EA950 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4935238A2D33B011000EA950 /* AboutView.swift */; };
 		4965D1DA2B8285BA00DBCA73 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4965D1D92B8285BA00DBCA73 /* Types.swift */; };
 		4965D1DC2B82861700DBCA73 /* VersionCheckAppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4965D1DB2B82861700DBCA73 /* VersionCheckAppState.swift */; };
@@ -56,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				493343B72D92218900071278 /* LaunchAtLogin in Frameworks */,
 				4918AC1F2B7C23200078BC00 /* CloudKitSyncMonitor in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -148,6 +150,7 @@
 			name = "Reply Clipboard";
 			packageProductDependencies = (
 				4918AC1E2B7C23200078BC00 /* CloudKitSyncMonitor */,
+				493343B62D92218900071278 /* LaunchAtLogin */,
 			);
 			productName = "Reply Clipboard";
 			productReference = 492DC1F92B79A1E3004BC668 /* Reply Clipboard.app */;
@@ -179,6 +182,7 @@
 			mainGroup = 492DC1F02B79A1E3004BC668;
 			packageReferences = (
 				4918AC1D2B7C23200078BC00 /* XCRemoteSwiftPackageReference "CloudKitSyncMonitor" */,
+				493343B52D92218900071278 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */,
 			);
 			productRefGroup = 492DC1FA2B79A1E3004BC668 /* Products */;
 			projectDirPath = "";
@@ -357,7 +361,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 11;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Reply Clipboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 7U6K972H9Q;
@@ -373,7 +377,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.andydragon.Reply-Clipboard";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -391,7 +395,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 11;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Reply Clipboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 7U6K972H9Q;
@@ -407,7 +411,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.andydragon.Reply-Clipboard";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -483,7 +487,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 11;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Reply Clipboard/Preview Content\"";
 				DEVELOPMENT_TEAM = 7U6K972H9Q;
@@ -499,7 +503,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.andydragon.Reply-Clipboard";
 				PRODUCT_NAME = "$(TARGET_NAME) with iCloud";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -541,6 +545,14 @@
 				minimumVersion = 1.2.1;
 			};
 		};
+		493343B52D92218900071278 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/LaunchAtLogin-Modern.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -548,6 +560,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4918AC1D2B7C23200078BC00 /* XCRemoteSwiftPackageReference "CloudKitSyncMonitor" */;
 			productName = CloudKitSyncMonitor;
+		};
+		493343B62D92218900071278 /* LaunchAtLogin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 493343B52D92218900071278 /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */;
+			productName = LaunchAtLogin;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

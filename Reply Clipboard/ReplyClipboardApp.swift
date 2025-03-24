@@ -5,6 +5,7 @@
 //  Created by Andrew Forget on 2024-02-11.
 //
 
+import LaunchAtLogin
 import SwiftUI
 import SwiftData
 
@@ -18,7 +19,7 @@ struct ReplyClipboardApp: App {
     @State var versionCheckResult: VersionCheckResult = .complete
     @State var versionCheckToast = VersionCheckToast()
 #endif
-
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -43,7 +44,6 @@ struct ReplyClipboardApp: App {
             versionCheckToast: $versionCheckToast,
             versionLocation: "https://vero.andydragon.com/static/data/replyclipboard/version.json")
 #endif
-
         // Menu bar menu
         MenuBarExtra {
             MenuView(
@@ -66,7 +66,7 @@ struct ReplyClipboardApp: App {
         // Main view window with id "main"
         Window("Reply Clipboard", id: "main") {
 #if STANDALONE
-            ContentView(appState) {
+            ContentView(appState, loginItemService) {
                 NSApplication.shared.activate(ignoringOtherApps: true)
                 openWindow(id: "about")
             }
@@ -89,6 +89,9 @@ struct ReplyClipboardApp: App {
             AboutView(packages: [
                 "CloudKitSyncMonitor": [
                     "Grant Grueninger ([Github profile](https://github.com/ggruen))"
+                ],
+                "LaunchAtLogin": [
+                    "Sindre Sorhus ([Github profile](https://github.com/sindresorhus))"
                 ],
                 "ToastView-SwiftUI": [
                     "Gaurav Tak ([Github profile](https://github.com/gauravtakroro))",

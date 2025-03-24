@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import CloudKitSyncMonitor
+import LaunchAtLogin
 
 struct ContentView: View {
     @Environment(\.openURL) var openURL
@@ -24,6 +25,7 @@ struct ContentView: View {
     @State private var deleteAlertText = ""
     @State private var deleteAlertAction: (() -> Void)? = nil
     @State private var showDeleteAlert = false
+    @State private var loginItem = false
     @ObservedObject private var syncMonitor = SyncMonitor.shared
 #if STANDALONE
     var appState: VersionCheckAppState
@@ -45,7 +47,7 @@ struct ContentView: View {
         self.openAbout = openAbout
     }
 #endif
-
+    
     var body: some View {
         NavigationSplitView {
             ZStack {
@@ -95,6 +97,13 @@ struct ContentView: View {
                     .background(Color.gray.opacity(0.000001))
                     .onTapGesture {
                         selectedItem = nil
+                    }
+                    HStack {
+                        LaunchAtLogin.Toggle("Launch at login")
+                            .padding([.top], 4)
+                            .padding([.bottom], 4)
+                            .padding([.leading], 20)
+                        Spacer()
                     }
                     if CloudKitConfiguration.Enabled {
                         HStack {
